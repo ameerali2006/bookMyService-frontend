@@ -39,6 +39,7 @@ export function createAxiosClient({
             return Promise.reject(error);
         }
         console.log("axios interseptor issue 1")
+        console.log(error)
         console.log(error.response?.status ,error.response.data.message)
 
         if (
