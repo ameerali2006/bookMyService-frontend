@@ -34,6 +34,7 @@ export function createAxiosClient({
         async (error) => {
         const originalRequest = error.config;
         console.log(error);
+        
 
         if (publicRoutes.includes(originalRequest.url)) {
             return Promise.reject(error);
