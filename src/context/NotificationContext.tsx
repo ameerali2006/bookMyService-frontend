@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
 import  io  from "socket.io-client";
 import { showToast } from "@/utils/notification-toster";
+import { ENV } from "@/config/env/env";
 
 
 
@@ -38,7 +39,7 @@ export const NotificationProvider = ({ children }: any) => {
     if (!user?._id) return;
 
     // ✅ Create socket only when user exists
-    const newSocket = io("http://localhost:5000", {
+    const newSocket = io(ENV.VITE_SERVER_BASEURL, {
       auth: {
         userId: user._id,
         userType
