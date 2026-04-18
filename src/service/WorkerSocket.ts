@@ -1,3 +1,4 @@
+import { ENV } from "@/config/env/env";
 import io from "socket.io-client";
 
 type SocketType = ReturnType<typeof io>;
@@ -10,7 +11,7 @@ export const connectWorkerSocket = (workerId: string ): SocketType | null => {
   if (!workerId) return null;
 
   if (!socket) {
-    socket = io(import.meta.env.VITE_API_URL || "http://localhost:5000", {
+    socket = io(ENV.VITE_SERVER_BASEURL || "http://localhost:5000", {
       auth: { userId: workerId, userType: "worker" },
       transports: ["websocket"],
       reconnection: true,
