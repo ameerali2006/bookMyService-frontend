@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import type { AdminBooking } from "@/interface/admin/booking"
 import { useNavigate } from "react-router-dom"
+import { generateBookingCode } from "@/utils/booking-convert"
 
 interface AdminBookingCardProps {
   booking: AdminBooking
@@ -36,7 +37,7 @@ export function AdminBookingCard({ booking }: AdminBookingCardProps) {
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs text-muted-foreground">Booking ID</p>
-            <p className="font-mono text-sm font-medium">{booking.id}</p>
+            <p className="font-mono text-sm font-medium">{generateBookingCode(booking.id)}</p>
           </div>
           <Badge className={statusVariants[booking.status]}>{booking.status.replace("-", " ")}</Badge>
         </div>
@@ -75,7 +76,7 @@ export function AdminBookingCard({ booking }: AdminBookingCardProps) {
       <div className="hidden items-center gap-4 sm:grid sm:grid-cols-[auto_1fr_1fr_1fr_auto_auto_auto_auto] sm:gap-6">
         <div>
           <p className="text-xs text-muted-foreground">ID</p>
-          <p className="font-mono text-sm font-medium">{booking.id}</p>
+          <p className="font-mono text-sm font-medium">{generateBookingCode(booking.id)}</p>
         </div>
         <div>
           <p className="text-xs text-muted-foreground">Customer</p>

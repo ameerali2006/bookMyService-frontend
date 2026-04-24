@@ -11,6 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { adminManagement } from "@/api/AdminManagement";
 import { ErrorToast } from "@/components/shared/Toaster";
 import type { AdminBookingDetailsDto } from "@/interface/admin/booking";
+import { generateBookingCode } from "@/utils/booking-convert";
 
 function getStatusColor(status: string) {
   switch (status) {
@@ -97,7 +98,7 @@ export default function AdminBookingDetailsPage() {
               </p>
 
               <h1 className="text-2xl font-bold text-[#0B1F3A] mt-1">
-                #{booking.id}
+                #{generateBookingCode(booking.id)}
               </h1>
 
               <p className="text-sm text-gray-500">

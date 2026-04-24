@@ -24,7 +24,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ErrorToast, SuccessToast } from "@/components/shared/Toaster";
+import { ErrorToast, SuccessToast, WarningToast } from "@/components/shared/Toaster";
 import CreateServiceModal from "@/components/admin/Service/AddServiceModal";
 import { useDebounce } from "@/hook/useDebounce";
 
@@ -132,6 +132,7 @@ export default function ServiceManagement() {
         duration: 0,
         image: "",
       });
+      WarningToast(res.data.message)
       fetchServices();
     } catch (err) {
       console.error("Failed to create service:", err);

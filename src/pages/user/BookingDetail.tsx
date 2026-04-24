@@ -246,8 +246,8 @@ export function BookingDetailPage() {
 
       // refresh booking details
       setTimeout(() => {
-          window.location.href = `/booking/${bookingId}/success?type=final`;
-        }, 1200)
+        window.location.href = `/booking/${bookingId}/success?type=final`;
+      }, 1200);
 
       setPaymentMethod(null);
     } catch (error: any) {
@@ -257,6 +257,32 @@ export function BookingDetailPage() {
       setLoadingPayment(false);
     }
   };
+  // const handleCancel = async () => {
+  //   if (!booking) return;
+
+  //   const confirmCancel = window.confirm(
+  //     "Are you sure you want to cancel this booking?",
+  //   );
+
+  //   if (!confirmCancel) return;
+
+  //   try {
+  //     const res = await userService.cancelBooking(booking.id);
+
+  //     if (!res.data.success) {
+  //       ErrorToast(res.data.message || "Cancel failed");
+  //       return;
+  //     }
+
+  //     SuccessToast("Booking cancelled successfully");
+
+  //     // update UI without reload
+  //     setBooking((prev) => (prev ? { ...prev, status: "cancelled" } : prev));
+  //   } catch (error: any) {
+  //     console.error(error);
+  //     ErrorToast(error?.response?.data?.message || "Cancel failed");
+  //   }
+  // };
 
   if (error) return <p className="p-6 text-center text-red-500">{error}</p>;
 
@@ -288,7 +314,6 @@ export function BookingDetailPage() {
 
   return (
     <>
-      
       <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-18 py-8 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Header Section */}
@@ -300,7 +325,7 @@ export function BookingDetailPage() {
                 </h1>
                 <p className="text-slate-500 mt-2 flex items-center gap-2">
                   <span className="text-sm font-mono bg-slate-200 px-3 py-1 rounded-full">
-                    {generateBookingCode( booking.id)}
+                    {generateBookingCode(booking.id)}
                   </span>
                 </p>
               </div>
@@ -929,9 +954,10 @@ export function BookingDetailPage() {
           )}
 
           {/* Action Buttons */}
-          {/* <div className="flex flex-col md:flex-row gap-4 mb-8">
+          <div className="flex flex-col md:flex-row gap-4 mb-8">
             {canCancel && (
               <Button
+                
                 variant="destructive"
                 size="lg"
                 className="flex-1 bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
@@ -940,7 +966,7 @@ export function BookingDetailPage() {
                 Cancel Booking
               </Button>
             )}
-            {!canCancel && (
+            {/* {!canCancel && (
               <Button
                 size="lg"
                 className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
@@ -948,8 +974,8 @@ export function BookingDetailPage() {
                 <Check size={18} className="mr-2" />
                 Booking Confirmed
               </Button>
-            )}
-          </div> */}
+            )} */}
+          </div>
         </div>
       </main>
       <ReviewModal
@@ -967,7 +993,6 @@ export function BookingDetailPage() {
           });
         }}
       />
-    
     </>
   );
 }
