@@ -75,6 +75,7 @@ const WorkManagementPage: React.FC = () => {
     fetchSchedule();
   }, []);
   const fetchSchedule = async () => {
+    console.log(worker)
     try {
       setLoading(true);
       console.log("Fetching schedule for:", worker?.email);

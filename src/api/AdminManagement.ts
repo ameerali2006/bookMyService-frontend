@@ -74,6 +74,7 @@ export const adminManagement = {
       | "completed"
       | "cancelled"
       | "awaiting-final-payment";
+    service?:string,
     page?: number;
     limit?: number;
   }) => {

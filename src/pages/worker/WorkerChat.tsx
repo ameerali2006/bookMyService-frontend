@@ -45,6 +45,7 @@ export default function WorkerMessagesPage() {
     reactToMessage,
     deleteMessage,
     isConnected,
+    inboxRefreshTrigger
   } = useSocketChat({
     auth,
     chatId: selectedChatId ?? "",
@@ -110,6 +111,7 @@ export default function WorkerMessagesPage() {
               role="worker"
               selectedChatId={selectedChatId ?? undefined}
               onSelectChat={setSelectedChatId}
+              messages={allMessages}
             />
           </div>
 

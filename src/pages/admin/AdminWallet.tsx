@@ -7,6 +7,7 @@ import type {
   WalletTransactionQuery,
   WalletTransactionResponse,
 } from "@/interface/shared/wallet"
+import { Loader2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -38,7 +39,14 @@ export default function AdminWallet() {
   }
 
   if (loading || !wallet) {
-    return <div className="p-8">Loading wallet...</div>
+    return (
+         <div className="flex min-h-[400px] items-center justify-center">
+           <div className="flex flex-col items-center gap-3">
+             <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+             <p className="text-sm text-gray-500">Loading wallet...</p>
+           </div>
+         </div>
+       );
   }
 
   return (

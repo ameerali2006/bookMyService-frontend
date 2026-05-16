@@ -2,19 +2,19 @@
 
 import { useEffect, useState } from "react";
 
-
 import { cn } from "@/lib/utils";
-import type { Chat } from "@/interface/shared/chat";
+import type { Chat, Message } from "@/interface/shared/chat";
 import { workerService } from "@/api/WorkerService";
 import { userService } from "@/api/UserService";
 
 interface InboxListProps {
   userId: string;
-  role: "user" | "worker"; 
+  role: "user" | "worker";
   selectedChatId?: string;
   onSelectChat: (chatId: string) => void;
   isLoading?: boolean;
   className?: string;
+  messages: Message[];
 }
 
 /**
@@ -28,38 +28,37 @@ export function InboxList({
   onSelectChat,
   isLoading: externalLoading = false,
   className,
+  messages,
 }: InboxListProps) {
   const [chats, setChats] = useState<Chat[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  console.log("refresh",messages)
   // Fetch inbox on mount
   useEffect(() => {
-    const loadInbox = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const response =
-          role === "worker"
-            ? await workerService.getWorkerInbox(userId)
-            : await userService.getInbox(userId);
-        if (response.data.success) {
-          setChats(response.data.chats); 
-        } else { 
-          setError("Failed to load inbox");
-        }
-      } catch (err) {
-        console.error("[InboxList] Error loading inbox:", err);
-        setError(
-          err instanceof Error ? err.message : "Failed to load inbox"
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
+    
     loadInbox();
-  }, [userId]);
+  }, [userId, role,messages]);
+  const loadInbox = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response =
+        role === "worker"
+          ? await workerService.getWorkerInbox(userId)
+          : await userService.getInbox(userId);
+      if (response.data.success) {
+        setChats(response.data.chats);
+      } else {
+        setError("Failed to load inbox");
+      }
+    } catch (err) {
+      console.error("[InboxList] Error loading inbox:", err);
+      setError(err instanceof Error ? err.message : "Failed to load inbox");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const truncateText = (text: string, maxLength: number = 50) => {
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -69,7 +68,7 @@ export function InboxList({
     <div
       className={cn(
         "flex flex-col bg-gray-50 border-r border-gray-200",
-        className
+        className,
       )}
     >
       <div className="p-4 border-b border-gray-200">
@@ -101,13 +100,16 @@ export function InboxList({
               onClick={() => onSelectChat(chat.id)}
               className={cn(
                 "w-full text-left p-4 border-b border-gray-100 hover:bg-gray-100 transition-colors",
-                selectedChatId === chat.id && "bg-blue-50"
+                selectedChatId === chat.id && "bg-blue-50",
               )}
             >
               <div className="flex items-center gap-3">
                 {chat.participantName && (
                   <img
-                    src={chat.participantAvatar || "https://st3.depositphotos.com/3581215/18899/v/450/depositphotos_188994514-stock-illustration-vector-illustration-male-silhouette-profile.jpg"}
+                    src={
+                      chat.participantAvatar ||
+                      "https://st3.depositphotos.com/3581215/18899/v/450/depositphotos_188994514-stock-illustration-vector-illustration-male-silhouette-profile.jpg"
+                    }
                     alt={chat.participantName}
                     className="w-10 h-10 rounded-full object-cover"
                   />

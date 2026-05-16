@@ -31,6 +31,7 @@ import { PaymentWrapper } from "@/components/stripe/Stripe";
 import ReviewModal from "@/components/user/Review";
 import type { IAddress } from "@/interface/user/address";
 import { generateBookingCode } from "@/utils/booking-convert";
+import CancellationModal from "@/components/user/BookingCancelModel";
 
 // -----------------------
 // INTERFACE
@@ -173,6 +174,8 @@ export function BookingDetailPage() {
   const [loadingPayment, setLoadingPayment] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
   const user = useSelector((state: RootState) => state.userTokenSlice.user);
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -257,32 +260,42 @@ export function BookingDetailPage() {
       setLoadingPayment(false);
     }
   };
-  // const handleCancel = async () => {
-  //   if (!booking) return;
+  const handleCancelBooking = async (finalReason: string) => {
+    if (!booking) return;
 
-  //   const confirmCancel = window.confirm(
-  //     "Are you sure you want to cancel this booking?",
-  //   );
+    try {
+      setCancelLoading(true);
 
-  //   if (!confirmCancel) return;
+      const res = await userService.cancelBooking(booking.id, {
+        reason: finalReason,
+      });
 
-  //   try {
-  //     const res = await userService.cancelBooking(booking.id);
+      if (!res.data.success) {
+        ErrorToast(res.data.message || "Cancel failed");
+        return;
+      }
 
-  //     if (!res.data.success) {
-  //       ErrorToast(res.data.message || "Cancel failed");
-  //       return;
-  //     }
+      SuccessToast("Booking cancelled successfully");
 
-  //     SuccessToast("Booking cancelled successfully");
+      // Update UI immediately
+      setBooking((prev) =>
+        prev
+          ? {
+              ...prev,
+              status: "cancelled",
+            }
+          : prev,
+      );
 
-  //     // update UI without reload
-  //     setBooking((prev) => (prev ? { ...prev, status: "cancelled" } : prev));
-  //   } catch (error: any) {
-  //     console.error(error);
-  //     ErrorToast(error?.response?.data?.message || "Cancel failed");
-  //   }
-  // };
+      // Close modal
+      setCancelModalOpen(false);
+    } catch (error: any) {
+      console.error(error);
+      ErrorToast(error?.response?.data?.message || "Cancel failed");
+    } finally {
+      setCancelLoading(false);
+    }
+  };
 
   if (error) return <p className="p-6 text-center text-red-500">{error}</p>;
 
@@ -957,7 +970,7 @@ export function BookingDetailPage() {
           <div className="flex flex-col md:flex-row gap-4 mb-8">
             {canCancel && (
               <Button
-                
+                onClick={() => setCancelModalOpen(true)}
                 variant="destructive"
                 size="lg"
                 className="flex-1 bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
@@ -991,6 +1004,15 @@ export function BookingDetailPage() {
               review: data,
             };
           });
+        }}
+      />
+      <CancellationModal
+        open={cancelModalOpen}
+        onOpenChange={setCancelModalOpen}
+        loading={cancelLoading}
+        bookingCode={generateBookingCode(booking.id)}
+        onConfirm={async ({ finalReason }) => {
+          await handleCancelBooking(finalReason);
         }}
       />
     </>

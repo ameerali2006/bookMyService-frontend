@@ -10,6 +10,7 @@ import {
   DollarSign,
   BarChart3,
   Star,
+  Loader2,
 } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -95,8 +96,16 @@ const AdminDashboard: React.FC = () => {
   fetchDashboard();
 }, []);
 
-  if (!dashboardData) {
-    return <h2>loading....</h2>;
+  
+  if (!dashboardData)  {
+    return (
+      <div className="flex min-h-[400px] items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <p className="text-sm text-gray-500">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   const stats = [

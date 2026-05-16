@@ -165,8 +165,8 @@ export const userService = {
   markAllAsRead: async () => {
     return await userAxios.patch("/notifications/read-all");
   },
-  // cancelBooking: async (bookingId:string) => {
-  //   return await userAxios.patch(`/booking/${bookingId}/cancel`);
-  // },
+  cancelBooking: async (bookingId:string,data:{reason:string}) => {
+    return await userAxios.patch(`/booking/${bookingId}/cancel`,data);
+  },
 
 };

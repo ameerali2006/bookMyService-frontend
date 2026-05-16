@@ -18,6 +18,7 @@ interface UseSocketChatReturn {
   reactToMessage: (messageId: string, emoji: string) => void;
   setReplyMessage: (message: Message | null) => void;
   replyMessage: Message | null;
+  inboxRefreshTrigger: number;
 }
 
 export function useSocketChat({
@@ -29,7 +30,7 @@ export function useSocketChat({
   const [isConnected, setIsConnected] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [replyMessage, setReplyMessage] = useState<Message | null>(null);
-
+  const [inboxRefreshTrigger, setInboxRefreshTrigger] = useState(0);
   /* ================= SOCKET CONNECT ================= */
 
   useEffect(() => {
@@ -48,63 +49,67 @@ export function useSocketChat({
     /* ================= RECEIVE MESSAGE ================= */
 
     socket.on("chat:receive", (message: Message) => {
-      console.log("brr",message)
+      console.log("brr", message);
       setMessages((prev) => [...prev, message]);
     });
 
     /* ================= DELETE ================= */
 
-    socket.on("chat:deleted", ({ messageId }:{messageId:string}) => {
+    socket.on("chat:deleted", ({ messageId }: { messageId: string }) => {
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.id === messageId
-            ? { ...msg, isDeleted: true }
-            : msg
-        )
+          msg.id === messageId ? { ...msg, isDeleted: true } : msg,
+        ),
       );
     });
 
     /* ================= REACTION ================= */
 
-    socket.on("chat:reaction", ({ messageId, userId, emoji }:{ messageId:string, userId :string, emoji:string}) => {
-      setMessages((prev) =>
-        prev.map((msg) => {
-          if (msg.id !== messageId) return msg;
+    socket.on(
+      "chat:reaction",
+      ({
+        messageId,
+        userId,
+        emoji,
+      }: {
+        messageId: string;
+        userId: string;
+        emoji: string;
+      }) => {
+        setMessages((prev) =>
+          prev.map((msg) => {
+            if (msg.id !== messageId) return msg;
 
-          const reactions = msg.reactions ?? [];
+            const reactions = msg.reactions ?? [];
 
-          const existing = reactions.find(
-            (r) => r.userId === userId
-          );
+            const existing = reactions.find((r) => r.userId === userId);
 
-          let updatedReactions;
+            let updatedReactions;
 
-          if (existing?.emoji === emoji) {
-            // remove reaction (toggle)
-            updatedReactions = reactions.filter(
-              (r) => r.userId !== userId
-            );
-          } else if (existing) {
-            // update emoji
-            updatedReactions = reactions.map((r) =>
-              r.userId === userId
-                ? { ...r, emoji }
-                : r
-            );
-          } else {
-            // add reaction
-            updatedReactions = [
-              ...reactions,
-              { userId, emoji },
-            ];
-          }
+            if (existing?.emoji === emoji) {
+              // remove reaction (toggle)
+              updatedReactions = reactions.filter((r) => r.userId !== userId);
+            } else if (existing) {
+              // update emoji
+              updatedReactions = reactions.map((r) =>
+                r.userId === userId ? { ...r, emoji } : r,
+              );
+            } else {
+              // add reaction
+              updatedReactions = [...reactions, { userId, emoji }];
+            }
 
-          return {
-            ...msg,
-            reactions: updatedReactions,
-          };
-        })
-      );
+            return {
+              ...msg,
+              reactions: updatedReactions,
+            };
+          }),
+        );
+      },
+    );
+    socket.on("inbox:refresh", () => {
+      console.log("chat refreash")
+      setInboxRefreshTrigger((prev) => prev + 1);
     });
 
     return () => {
@@ -137,7 +142,7 @@ export function useSocketChat({
 
       setReplyMessage(null);
     },
-    [chatId, replyMessage]
+    [chatId, replyMessage],
   );
 
   /* ================= DELETE ================= */
@@ -149,7 +154,7 @@ export function useSocketChat({
         messageId,
       });
     },
-    [chatId]
+    [chatId],
   );
 
   /* ================= REACT ================= */
@@ -162,7 +167,7 @@ export function useSocketChat({
         emoji,
       });
     },
-    [chatId]
+    [chatId],
   );
 
   return {
@@ -173,5 +178,6 @@ export function useSocketChat({
     reactToMessage,
     setReplyMessage,
     replyMessage,
+    inboxRefreshTrigger,
   };
 }

@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { ExternalLink, Star } from "lucide-react";
+import { ExternalLink, Loader2, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/admin/Navbar";
 import Sidebar from "@/components/admin/Sidebar";
@@ -62,9 +62,12 @@ export default function AdminBookingDetailsPage() {
   }, [bookingId]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center text-gray-500">
-        Loading booking...
+     return (
+      <div className="flex min-h-[400px] items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <p className="text-sm text-gray-500">Loading ...</p>
+        </div>
       </div>
     );
   }

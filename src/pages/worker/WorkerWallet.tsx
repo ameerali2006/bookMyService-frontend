@@ -7,6 +7,7 @@ import type {
   WalletTransactionResponse,
 } from "@/interface/shared/wallet"
 import { useEffect, useState } from "react"
+import { Loader2 } from "lucide-react"
 
 export default function WorkerWallet() {
   const [wallet, setWallet] = useState<Wallet | null>(null)
@@ -34,9 +35,16 @@ export default function WorkerWallet() {
     return res.data.data
   }
 
-  if (loading || !wallet) {
-    return <div className="p-8">Loading wallet...</div>
-  }
+ if (loading || !wallet) {
+  return (
+    <div className="flex min-h-[400px] items-center justify-center">
+      <div className="flex flex-col items-center gap-3">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <p className="text-sm text-gray-500">Loading wallet...</p>
+      </div>
+    </div>
+  );
+}
 
   return (
     <WorkerLayout>
