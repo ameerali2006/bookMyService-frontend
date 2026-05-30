@@ -103,12 +103,13 @@ const Header = () => {
 
         {/* Search Bar */}
         <div className="flex-1 max-w-md mx-8 relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
+          
+          {/* <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" /> */}
+          {/* <Input
             type="text"
             placeholder="Search"
             className="w-full rounded-full bg-white py-2 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
-          />
+          /> */}
         </div>
 
         {/* Navigation and Icons */}
