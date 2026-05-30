@@ -215,6 +215,8 @@ export function BookingDetailPage() {
 
     fetchDetail();
     console.log("jskjkjs");
+    console.log(booking);
+    // updateing
     console.log(booking?.status, booking?.review);
 
     return () => {
