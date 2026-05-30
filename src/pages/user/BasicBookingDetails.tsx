@@ -18,7 +18,7 @@ export default function BasicBookingDetails() {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [datesData, setDatesData] = useState<any[]>([]);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const param = useParams();
   const workerId = param.workerId;
 
@@ -27,16 +27,16 @@ export default function BasicBookingDetails() {
       try {
         setLoading(true);
         const response = await userService.getWorkerAvailability(
-          workerId as string
+          workerId as string,
         );
-        console.log(response)
+        console.log(response);
         const { success, data } = response.data;
 
         if (success && data?.dates) {
           setDatesData(data.dates);
-          const todayStr = selectedDate.toISOString().split("T")[0];
+          const todayStr = getDateKey(selectedDate);
           const todayAvailability = data.dates.find(
-            (d: any) => d.date === todayStr
+            (d: any) => d.date === todayStr,
           );
           setAvailableTimes(todayAvailability?.availableTimes || []);
         } else {
@@ -58,9 +58,16 @@ export default function BasicBookingDetails() {
     setSelectedDate(date);
     setSelectedTime(null);
 
-    const selectedDateStr = date.toISOString().split("T")[0];
+    const selectedDateStr = getDateKey(date);
     const found = datesData.find((d: any) => d.date === selectedDateStr);
+    console.log("Selected:", selectedDateStr);
 
+    console.log(
+      datesData.map((d) => ({
+        date: d.date,
+        day: d.day,
+      })),
+    );
     if (found?.enabled) {
       setAvailableTimes(found.availableTimes);
     } else {
@@ -70,6 +77,13 @@ export default function BasicBookingDetails() {
 
   const handleTimeSelect = (t: string) => {
     setSelectedTime(t);
+  };
+  const getDateKey = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
   };
 
   const handleProceed = async () => {
@@ -94,16 +108,18 @@ export default function BasicBookingDetails() {
       setLoading(true);
 
       const response = await userService.selectDateTimeAvailablity(data);
-      
-      console.log(response)
+
+      console.log(response);
 
       if (response.data.success) {
-        console.log("1")
-        SuccessToast(response.data.message||"Time slot selected successfully!");
-        
+        console.log("1");
+        SuccessToast(
+          response.data.message || "Time slot selected successfully!",
+        );
+
         navigate(`/services/preBooking/${response.data.bookingId}`);
       } else {
-        console.log('2')
+        console.log("2");
         ErrorToast(response.data.message || "Failed to confirm time slot.");
       }
     } catch (error) {
@@ -155,7 +171,7 @@ export default function BasicBookingDetails() {
               "mx-auto block w-[800px] rounded-2xl px-8 py-4 text-xl font-semibold shadow-lg transition",
               isProceedDisabled
                 ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                : "bg-yellow-400 text-blue-900 hover:bg-yellow-500"
+                : "bg-yellow-400 text-blue-900 hover:bg-yellow-500",
             )}
           >
             Proceed

@@ -41,7 +41,7 @@ export interface DaySchedule {
   enabled: boolean;
   startTime: string;
   endTime: string;
-  date:Date;
+  date: Date;
   breaks: BreakItemType[];
 }
 
@@ -65,7 +65,7 @@ export interface BackendData {
 // ---------- Component ----------
 const WorkManagementPage: React.FC = () => {
   const worker = useSelector(
-    (state: RootState) => state.workerTokenSlice.worker
+    (state: RootState) => state.workerTokenSlice.worker,
   );
   const [loading, setLoading] = useState(true);
   const [schedule, setSchedule] = useState<DaySchedule[]>([]);
@@ -75,13 +75,13 @@ const WorkManagementPage: React.FC = () => {
     fetchSchedule();
   }, []);
   const fetchSchedule = async () => {
-    console.log(worker)
+    console.log(worker);
     try {
       setLoading(true);
       console.log("Fetching schedule for:", worker?.email);
 
       const response = await workerService.getWorkingDetails(
-        String(worker?.email)
+        String(worker?.email),
       );
       const backendData = response.data.data;
 
@@ -117,7 +117,7 @@ const WorkManagementPage: React.FC = () => {
         enabled: dayObj.enabled,
         startTime: toIso(dayObj.startTime),
         endTime: toIso(dayObj.endTime),
-        date:dayObj.date,
+        date: dayObj.date,
         breaks: (dayObj.breaks || []).map((b: any, idx: number) => ({
           id: `break-${index}-${idx}`,
           label: b.label || `Break ${idx + 1}`,
@@ -134,10 +134,10 @@ const WorkManagementPage: React.FC = () => {
   const updateDay = (
     dayId: string,
     field: keyof DaySchedule,
-    value: string | boolean
+    value: string | boolean,
   ) => {
     setSchedule((prev) =>
-      prev.map((day) => (day.id === dayId ? { ...day, [field]: value } : day))
+      prev.map((day) => (day.id === dayId ? { ...day, [field]: value } : day)),
     );
   };
 
@@ -162,7 +162,7 @@ const WorkManagementPage: React.FC = () => {
         };
 
         return { ...day, breaks: [...day.breaks, newBreak] };
-      })
+      }),
     );
   };
 
@@ -171,8 +171,8 @@ const WorkManagementPage: React.FC = () => {
       prev.map((day) =>
         day.id === dayId
           ? { ...day, breaks: day.breaks.filter((b) => b.id !== breakId) }
-          : day
-      )
+          : day,
+      ),
     );
   };
 
@@ -180,7 +180,7 @@ const WorkManagementPage: React.FC = () => {
     dayId: string,
     breakId: string,
     field: keyof BreakItemType,
-    value: string
+    value: string,
   ) => {
     setSchedule((prev) =>
       prev.map((day) =>
@@ -188,11 +188,11 @@ const WorkManagementPage: React.FC = () => {
           ? {
               ...day,
               breaks: day.breaks.map((b) =>
-                b.id === breakId ? { ...b, [field]: value } : b
+                b.id === breakId ? { ...b, [field]: value } : b,
               ),
             }
-          : day
-      )
+          : day,
+      ),
     );
   };
 
@@ -212,15 +212,15 @@ const WorkManagementPage: React.FC = () => {
                 id: generateBreakId(),
               })),
             }
-          : day
-      )
+          : day,
+      ),
     );
   };
 
   const calculateWorkingHours = (
     startTime: string,
     endTime: string,
-    breaks: BreakItemType[]
+    breaks: BreakItemType[],
   ) => {
     const start = new Date(startTime);
     let end = new Date(endTime);
@@ -267,17 +267,147 @@ const WorkManagementPage: React.FC = () => {
     const pad = (n: number) => String(n).padStart(2, "0");
     return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
   };
+  const getMinutesBetween = (startIso: string, endIso: string) => {
+    const start = new Date(startIso);
+    const end = new Date(endIso);
 
+    return (end.getTime() - start.getTime()) / (1000 * 60);
+  };
+
+  const isBreakInsideWorkHours = (
+    workStart: string,
+    workEnd: string,
+    breakStart: string,
+    breakEnd: string,
+  ) => {
+    const ws = new Date(workStart);
+    let we = new Date(workEnd);
+
+    const bs = new Date(breakStart);
+    let be = new Date(breakEnd);
+
+    // Handle cross-midnight
+    if (we <= ws) {
+      we.setDate(we.getDate() + 1);
+    }
+
+    if (be <= bs) {
+      be.setDate(be.getDate() + 1);
+    }
+
+    return bs >= ws && be <= we;
+  };
+  const validateSchedule = () => {
+    for (const day of schedule) {
+      if (!day.enabled) continue;
+
+      const workStart = new Date(day.startTime);
+      let workEnd = new Date(day.endTime);
+
+      // Cross-midnight support
+      if (workEnd <= workStart) {
+        workEnd.setDate(workEnd.getDate() + 1);
+      }
+
+      const workMinutes =
+        (workEnd.getTime() - workStart.getTime()) / (1000 * 60);
+
+      let totalBreakMinutes = 0;
+
+      for (const breakItem of day.breaks) {
+        const breakStart = new Date(breakItem.breakStart);
+        let breakEnd = new Date(breakItem.breakEnd);
+
+        if (breakEnd <= breakStart) {
+          breakEnd.setDate(breakEnd.getDate() + 1);
+        }
+
+        const breakMinutes =
+          (breakEnd.getTime() - breakStart.getTime()) / (1000 * 60);
+
+        // 1. Break must be positive
+        if (breakMinutes <= 0) {
+          ErrorToast(
+            `${day.name}: Break "${breakItem.label}" has invalid duration`,
+          );
+          return false;
+        }
+
+        // 2. Single break max 1 hour
+        if (breakMinutes > 60) {
+          ErrorToast(
+            `${day.name}: Break "${breakItem.label}" cannot exceed 1 hour`,
+          );
+          return false;
+        }
+
+        // 3. Break inside work hours
+        const insideWork = isBreakInsideWorkHours(
+          day.startTime,
+          day.endTime,
+          breakItem.breakStart,
+          breakItem.breakEnd,
+        );
+
+        if (!insideWork) {
+          ErrorToast(
+            `${day.name}: Break "${breakItem.label}" must be inside working hours`,
+          );
+          return false;
+        }
+        for (let i = 0; i < day.breaks.length; i++) {
+          for (let j = i + 1; j < day.breaks.length; j++) {
+            const aStart = new Date(day.breaks[i].breakStart);
+            const aEnd = new Date(day.breaks[i].breakEnd);
+
+            const bStart = new Date(day.breaks[j].breakStart);
+            const bEnd = new Date(day.breaks[j].breakEnd);
+
+            const overlap = aStart < bEnd && bStart < aEnd;
+
+            if (overlap) {
+              ErrorToast(`${day.name}: Breaks cannot overlap`);
+              return false;
+            }
+          }
+        }
+
+        totalBreakMinutes += breakMinutes;
+      }
+
+      // 4. Total breaks cannot exceed work hours
+      if (totalBreakMinutes >= workMinutes) {
+        ErrorToast(`${day.name}: Total break time cannot exceed working hours`);
+        return false;
+      }
+
+      // 5. Work duration minimum
+      if (workMinutes < 60) {
+        ErrorToast(`${day.name}: Working hours must be at least 1 hour`);
+        return false;
+      }
+
+      // 6. Limit total breaks
+      if (day.breaks.length > 3) {
+        ErrorToast(`${day.name}: Maximum 3 breaks allowed per day`);
+        return false;
+      }
+    }
+
+    return true;
+  };
   const saveSchedule = async () => {
     try {
-      // 🔄 Convert schedule back to backend format
+      const isValid = validateSchedule();
+
+      if (!isValid) return;
       const payload = {
         days: schedule.map((day) => ({
           day: day.name,
           enabled: day.enabled,
-          date:day.date,
-          startTime: isoToHHMM(day.startTime), // convert ISO → HH:mm
-          endTime: isoToHHMM(day.endTime), // convert ISO → HH:mm
+          date: day.date,
+          startTime: isoToHHMM(day.startTime), 
+          endTime: isoToHHMM(day.endTime), 
           breaks: day.breaks.map((b) => ({
             label: b.label,
             breakStart: isoToHHMM(b.breakStart), // keep full ISO for breaks
@@ -290,7 +420,7 @@ const WorkManagementPage: React.FC = () => {
 
       const response = await workerService.updateWorkingDetails(
         String(worker?.email),
-        payload
+        payload,
       );
 
       // Update frontend state with returned backend data
@@ -328,7 +458,7 @@ const WorkManagementPage: React.FC = () => {
       const { totalMinutes } = calculateWorkingHours(
         day.startTime,
         day.endTime,
-        day.breaks
+        day.breaks,
       );
       return total + totalMinutes / 60;
     }, 0);
@@ -379,7 +509,7 @@ const WorkManagementPage: React.FC = () => {
     const BreakIcon = getBreakIcon(breakItem.label);
     const isValidTime = validateBreakTime(
       breakItem.breakStart,
-      breakItem.breakEnd
+      breakItem.breakEnd,
     );
 
     return (
@@ -423,7 +553,7 @@ const WorkManagementPage: React.FC = () => {
                 dayId,
                 breakItem.id,
                 "breakStart",
-                updateTime(breakItem.breakStart, e.target.value)
+                updateTime(breakItem.breakStart, e.target.value),
               )
             }
             disabled={!dayEnabled}
@@ -437,7 +567,7 @@ const WorkManagementPage: React.FC = () => {
                 dayId,
                 breakItem.id,
                 "breakEnd",
-                updateTime(breakItem.breakEnd, e.target.value)
+                updateTime(breakItem.breakEnd, e.target.value),
               )
             }
             disabled={!dayEnabled}
@@ -462,7 +592,7 @@ const WorkManagementPage: React.FC = () => {
     const { hours, minutes } = calculateWorkingHours(
       day.startTime,
       day.endTime,
-      day.breaks
+      day.breaks,
     );
     const isCrossMidnight = day.startTime > day.endTime;
 
@@ -540,7 +670,7 @@ const WorkManagementPage: React.FC = () => {
                   updateDay(
                     day.id,
                     "startTime",
-                    updateTime(day.startTime, e.target.value)
+                    updateTime(day.startTime, e.target.value),
                   )
                 }
                 disabled={!day.enabled}
@@ -552,7 +682,7 @@ const WorkManagementPage: React.FC = () => {
                   updateDay(
                     day.id,
                     "endTime",
-                    updateTime(day.endTime, e.target.value)
+                    updateTime(day.endTime, e.target.value),
                   )
                 }
                 disabled={!day.enabled}
@@ -642,7 +772,7 @@ const WorkManagementPage: React.FC = () => {
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                   Work Schedule Management
                 </h1>
-                
+
                 <p className="text-gray-600 text-sm sm:text-base">
                   Configure your weekly working hours with custom breaks and
                   shift patterns
@@ -650,13 +780,13 @@ const WorkManagementPage: React.FC = () => {
               </div>
             </div>
             <Button
-                  variant="outline"
-                  onClick={() => setCalendarModalOpen(true)}
-                  className="flex items-center gap-2"
-                >
-                  <Calendar className="h-5 w-5" />
-                  Manage Calendar
-                </Button>
+              variant="outline"
+              onClick={() => setCalendarModalOpen(true)}
+              className="flex items-center gap-2"
+            >
+              <Calendar className="h-5 w-5" />
+              Manage Calendar
+            </Button>
 
             {/* Summary Stats */}
             <div className="flex flex-wrap gap-4 mt-4">
@@ -742,10 +872,9 @@ const WorkManagementPage: React.FC = () => {
             </CardContent>
           </Card>
           <CalendarModal
-          open={calendarModalOpen}
-          onOpenChange={setCalendarModalOpen}
-         
-        />
+            open={calendarModalOpen}
+            onOpenChange={setCalendarModalOpen}
+          />
         </div>
       </div>
     </WorkerLayout>
