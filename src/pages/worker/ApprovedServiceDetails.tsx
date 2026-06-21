@@ -79,7 +79,8 @@ export type BookingStatus =
   | "confirmed"
   | "in-progress"
   | "completed"
-  | "awaiting-final-payment";
+  | "awaiting-final-payment"
+  |"cancelled";
 export type PaymentMethod = "cash" | "card" | "upi" | "wallet";
 
 export interface IBooking {
@@ -138,6 +139,12 @@ const STATUS_CONFIG: Record<
     dot: "bg-violet-400",
     badge: "bg-violet-50 text-violet-700 border-violet-200",
   },
+  "cancelled": {
+    label: "cancelled",
+    dot: "bg-red-400",
+    badge: "bg-red-50 text-red-700 border-red-200",
+  },
+
 };
 
 const TIMELINE_STEPS: { key: BookingStatus; label: string }[] = [
@@ -341,6 +348,7 @@ export default function WorkerBookingDetailsPage() {
   };
 
   const { label, action, variant } = getActionButton();
+  const isCancelled = booking.status === "cancelled";
 
   return (
     <WorkerLayout>
@@ -426,6 +434,7 @@ export default function WorkerBookingDetailsPage() {
               </Button>
               <Button
                 size="sm"
+                disabled={isCancelled}
                 onClick={action}
                 className={cn(
                   "gap-2 flex-1 sm:flex-none",
@@ -435,7 +444,7 @@ export default function WorkerBookingDetailsPage() {
                 )}
               >
                 <Navigation className="h-3.5 w-3.5" />
-                {label}
+                {isCancelled ? "Booking Cancelled" : label}
               </Button>
             </div>
           </SectionCard>

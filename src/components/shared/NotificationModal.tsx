@@ -8,6 +8,7 @@ export interface INotification {
   _id: string;
   title: string;
   message: string;
+  bookingId?: string;
   type: "booking" | "payment" | "review" | "system";
   isRead: boolean;
   createdAt: Date;
@@ -19,6 +20,7 @@ interface Props {
   notifications: INotification[];
   onMarkRead: (id: string) => void;
   onMarkAllRead: () => void; // ✅ NEW
+  onNotificationClick?: (notification: INotification) => void;
 }
 
 export default function NotificationPanel({
@@ -26,7 +28,8 @@ export default function NotificationPanel({
   onClose,
   notifications,
   onMarkRead,
-  onMarkAllRead
+  onMarkAllRead,
+  onNotificationClick,
 }: Props) {
   const [tab, setTab] = useState<"all" | "unread">("all");
 
@@ -35,9 +38,12 @@ export default function NotificationPanel({
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const filtered =
-    tab === "unread"
-      ? notifications.filter((n) => !n.isRead)
-      : notifications;
+    tab === "unread" ? notifications.filter((n) => !n.isRead) : notifications;
+  console.log(notifications);
+  const handleClick = (notification: INotification) => {
+    onMarkRead(notification._id);
+    onNotificationClick?.(notification);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -49,7 +55,6 @@ export default function NotificationPanel({
 
       {/* Modal */}
       <div className="relative w-[420px] max-h-[85vh] bg-white rounded-2xl shadow-2xl flex flex-col">
-        
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-3">
@@ -57,9 +62,7 @@ export default function NotificationPanel({
               <Bell className="text-blue-600" size={18} />
             </div>
             <div>
-              <h2 className="font-semibold text-gray-800">
-                Notification
-              </h2>
+              <h2 className="font-semibold text-gray-800">Notification</h2>
               <p className="text-xs text-gray-500">
                 {unreadCount === 0
                   ? "No unread notifications"
@@ -81,9 +84,7 @@ export default function NotificationPanel({
           <button
             onClick={() => setTab("unread")}
             className={`px-3 py-1.5 rounded-full text-sm flex items-center gap-1 ${
-              tab === "unread"
-                ? "bg-gray-200 font-medium"
-                : "text-gray-500"
+              tab === "unread" ? "bg-gray-200 font-medium" : "text-gray-500"
             }`}
           >
             Unread
@@ -95,9 +96,7 @@ export default function NotificationPanel({
           <button
             onClick={() => setTab("all")}
             className={`px-3 py-1.5 rounded-full text-sm ${
-              tab === "all"
-                ? "bg-blue-600 text-white"
-                : "text-gray-500"
+              tab === "all" ? "bg-blue-600 text-white" : "text-gray-500"
             }`}
           >
             All
@@ -107,9 +106,9 @@ export default function NotificationPanel({
             onClick={onMarkAllRead}
             className="ml-auto bg-gray-100 p-2 rounded-lg hover:bg-gray-200"
             title="Mark all as read"
-            >
+          >
             <Check size={16} />
-            </button>
+          </button>
         </div>
 
         {/* List */}
@@ -122,7 +121,7 @@ export default function NotificationPanel({
             filtered.map((n) => (
               <div
                 key={n._id}
-                onClick={() => onMarkRead(n._id)}
+                onClick={() => handleClick(n)}
                 className={`p-4 rounded-xl cursor-pointer transition border ${
                   n.isRead
                     ? "bg-gray-50 hover:bg-gray-100"
@@ -141,9 +140,7 @@ export default function NotificationPanel({
                   </span>
                 </div>
 
-                <p className="text-xs text-gray-600 mt-1">
-                  {n.message}
-                </p>
+                <p className="text-xs text-gray-600 mt-1">{n.message}</p>
               </div>
             ))
           )}

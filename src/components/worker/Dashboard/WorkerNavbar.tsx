@@ -5,15 +5,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import NotificationPanel, { type INotification } from "@/components/shared/NotificationModal";
+import NotificationPanel, {
+  type INotification,
+} from "@/components/shared/NotificationModal";
 
 import { workerService } from "@/api/WorkerService"; // ✅ create this like userService
+import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
   const workerData = useSelector(
-    (state: RootState) => state.workerTokenSlice.worker
+    (state: RootState) => state.workerTokenSlice.worker,
   );
-
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const [notifOpen, setNotifOpen] = useState(false);
 
@@ -36,7 +39,7 @@ export const Navbar = () => {
   // ✅ Mark single read
   const handleMarkRead = async (id: string) => {
     setNotifications((prev) =>
-      prev.map((n) => (n._id === id ? { ...n, isRead: true } : n))
+      prev.map((n) => (n._id === id ? { ...n, isRead: true } : n)),
     );
 
     try {
@@ -50,9 +53,7 @@ export const Navbar = () => {
   const handleMarkAllRead = async () => {
     try {
       await workerService.markAllAsRead();
-      setNotifications((prev) =>
-        prev.map((n) => ({ ...n, isRead: true }))
-      );
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
     } catch (err) {
       console.error("Failed to mark all as read");
     }
@@ -97,6 +98,11 @@ export const Navbar = () => {
         notifications={notifications}
         onMarkRead={handleMarkRead}
         onMarkAllRead={handleMarkAllRead}
+        onNotificationClick={(notification) => {
+          if (notification.bookingId) {
+            navigate(`/worker/appointments/approved/${notification.bookingId}`);
+          }
+        }}
       />
     </header>
   );

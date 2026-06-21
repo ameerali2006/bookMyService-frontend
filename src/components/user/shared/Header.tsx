@@ -1,6 +1,6 @@
 import { Search, Calendar, User, Menu, MapPin, Bell } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate,} from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -26,6 +26,7 @@ const Header = () => {
 
   // ✅ Get user and city from Redux
   const user = useSelector((state: RootState) => state.userTokenSlice.user);
+ const navigate = useNavigate();
   const city = useSelector(
     (state: RootState) => state.userTokenSlice.location?.city || "Your City",
   );
@@ -70,6 +71,7 @@ const Header = () => {
     console.error("Failed to mark read");
   }
 };
+
   const handleMarkAllRead = async () => {
   try {
     await userService.markAllAsRead(); // ✅ backend API
@@ -263,6 +265,11 @@ const Header = () => {
         notifications={notifications}
         onMarkRead={handleMarkRead}
         onMarkAllRead={handleMarkAllRead}
+        onNotificationClick={(notification) => {
+    if (notification.bookingId) {
+      navigate(`/user/bookings/${notification.bookingId}`);
+    }
+  }}
       />
     </header>
   );
