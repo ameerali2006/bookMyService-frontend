@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { authService } from "@/api/AuthService";
 import { ErrorToast, WarningToast } from "./Toaster";
+import axios from "axios";
 
 interface ResetPasswordFormProps {
   role: "user" | "worker";
@@ -42,8 +43,14 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ role, token, onBa
       }
       setResetSuccess(true);
       onSuccess?.();
-    } catch (error: any) {
-      setErrorMessage(error?.message || "Password reset failed");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.response?.data?.message || error.message);
+      } else if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("Password reset failed");
+      }
     } finally {
       setLoading(false);
     }

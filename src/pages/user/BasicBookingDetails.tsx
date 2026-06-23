@@ -11,13 +11,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ErrorToast, SuccessToast } from "@/components/shared/Toaster";
 
+interface DateAvailability {
+  date: string;
+  enabled: boolean;
+  day: string;
+  availableTimes: TimeRange[];
+}
+
 export default function BasicBookingDetails() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [availableTimes, setAvailableTimes] = useState<TimeRange[]>([]);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
-  const [datesData, setDatesData] = useState<any[]>([]);
+  const [datesData, setDatesData] = useState<DateAvailability[]>([]);
   const navigate = useNavigate();
   const param = useParams();
   const workerId = param.workerId;
@@ -36,7 +43,7 @@ export default function BasicBookingDetails() {
           setDatesData(data.dates);
           const todayStr = getDateKey(selectedDate);
           const todayAvailability = data.dates.find(
-            (d: any) => d.date === todayStr,
+            (d: DateAvailability) => d.date === todayStr,
           );
           setAvailableTimes(todayAvailability?.availableTimes || []);
         } else {
@@ -59,7 +66,7 @@ export default function BasicBookingDetails() {
     setSelectedTime(null);
 
     const selectedDateStr = getDateKey(date);
-    const found = datesData.find((d: any) => d.date === selectedDateStr);
+    const found = datesData.find((d: DateAvailability) => d.date === selectedDateStr);
     console.log("Selected:", selectedDateStr);
 
     console.log(

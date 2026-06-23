@@ -56,6 +56,7 @@ export interface BackendDay {
   enabled: boolean;
   startTime: string;
   endTime: string;
+  date?: Date | string;
   breaks: BackendBreak[];
 }
 
@@ -98,8 +99,8 @@ const WorkManagementPage: React.FC = () => {
       setLoading(false);
     }
   };
-  const transformedData = (backendData: BackendData) => {
-    return backendData.days.map((dayObj: any, index: number) => {
+  const transformedData = (backendData: BackendData): DaySchedule[] => {
+    return backendData.days.map((dayObj: BackendDay, index: number) => {
       // ✅ Use a safe reference date
       const baseDate = new Date();
 
@@ -117,8 +118,8 @@ const WorkManagementPage: React.FC = () => {
         enabled: dayObj.enabled,
         startTime: toIso(dayObj.startTime),
         endTime: toIso(dayObj.endTime),
-        date: dayObj.date,
-        breaks: (dayObj.breaks || []).map((b: any, idx: number) => ({
+        date: dayObj.date ? new Date(dayObj.date) : new Date(),
+        breaks: (dayObj.breaks || []).map((b: BackendBreak, idx: number) => ({
           id: `break-${index}-${idx}`,
           label: b.label || `Break ${idx + 1}`,
           breakStart: toIso(b.breakStart),

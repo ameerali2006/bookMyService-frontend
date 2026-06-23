@@ -47,6 +47,16 @@ export interface IAdminDashboardResponse {
   }[];
 }
 
+interface RawRevenueChartItem {
+  month: string;
+  revenue: number;
+}
+
+interface RawServiceDistributionItem {
+  service: string;
+  count: number;
+}
+
 const AdminDashboard: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -74,12 +84,12 @@ const AdminDashboard: React.FC = () => {
           revenueGrowth: raw.stats.revenueGrowth,
         },
 
-        revenueChart: raw.revenueChart.map((item: any) => ({
+        revenueChart: raw.revenueChart.map((item: RawRevenueChartItem) => ({
           month: item.month,
           total: item.revenue,   // 🔥 map revenue → total
         })),
 
-        serviceDistribution: raw.serviceDistribution.map((item: any) => ({
+        serviceDistribution: raw.serviceDistribution.map((item: RawServiceDistributionItem) => ({
           name: item.service,    // 🔥 map service → name
           value: item.count,     // 🔥 map count → value
         })),

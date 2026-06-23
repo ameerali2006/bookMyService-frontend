@@ -19,14 +19,30 @@ import {
 } from "@/components/ui/select";
 import CropImageModal from "@/components/shared/ImageCropModal.";
 
+interface ServiceFormData {
+  category: string;
+  description: string;
+  price: number;
+  priceUnit: "per hour" | "per job" | "per item";
+  duration: number;
+  image: string;
+}
+
 interface Props {
   open: boolean;
   setOpen: (v: boolean) => void;
-  onCreate: (data: any) => void;
+  onCreate: (data: ServiceFormData) => void;
 }
 
 export default function CreateServiceModal({ open, setOpen, onCreate }: Props) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    category: string;
+    description: string;
+    price: string;
+    priceUnit: "per hour" | "per job" | "per item";
+    duration: string;
+    image: string;
+  }>({
     category: "",
     description: "",
     price: "",          // <-- now string
@@ -35,7 +51,7 @@ export default function CreateServiceModal({ open, setOpen, onCreate }: Props) {
     image: "",
   });
 
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [cropOpen, setCropOpen] = useState(false);
 
   const handleCropComplete = async (file: File) => {
@@ -50,7 +66,7 @@ export default function CreateServiceModal({ open, setOpen, onCreate }: Props) {
   // VALIDATION
   // -----------------------------
   const validate = () => {
-    const newErrors: any = {};
+    const newErrors: Record<string, string> = {};
 
     if (!formData.category.trim()) newErrors.category = "Category is required";
     if (!formData.description.trim())
@@ -76,7 +92,7 @@ export default function CreateServiceModal({ open, setOpen, onCreate }: Props) {
   const handleSubmit = () => {
     if (!validate()) return;
 
-    const finalData = {
+    const finalData: ServiceFormData = {
       ...formData,
       price: Number(formData.price),
       duration: Number(formData.duration),
@@ -149,7 +165,7 @@ export default function CreateServiceModal({ open, setOpen, onCreate }: Props) {
                 <Select
                   value={formData.priceUnit}
                   onValueChange={(v) =>
-                    setFormData({ ...formData, priceUnit: v })
+                    setFormData({ ...formData, priceUnit: v as "per hour" | "per job" | "per item" })
                   }
                 >
                   <SelectTrigger>

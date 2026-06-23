@@ -130,7 +130,7 @@ export default function WorkerManagement() {
       key: "category",
       title: "Category",
 
-      render: (value) => value?.category || "N/A",
+      render: (value) => (value as Worker["category"])?.category || "N/A",
     },
     { key: "experience", title: "Experience" },
     {
@@ -147,7 +147,7 @@ export default function WorkerManagement() {
               : "bg-red-100 text-red-700"
           }`}
         >
-          {value}
+          {value as string}
         </span>
       ),
     },

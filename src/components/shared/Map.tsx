@@ -11,8 +11,8 @@ interface MapComponentProps {
 
 export default function MapComponent({ center, onLocationSelect }: MapComponentProps) {
   const mapRef = useRef<HTMLDivElement>(null)
-  const mapInstanceRef = useRef<any>(null)
-  const markerRef = useRef<any>(null)
+  const mapInstanceRef = useRef<L.Map | null>(null)
+  const markerRef = useRef<L.Marker | null>(null)
 
   useEffect(() => {
     if (!mapRef.current) return
@@ -29,7 +29,7 @@ export default function MapComponent({ center, onLocationSelect }: MapComponentP
         
 
         // Fix default marker icons
-        delete (L.Icon.Default.prototype as any)._getIconUrl
+        delete (L.Icon.Default.prototype as { _getIconUrl?: unknown })._getIconUrl
         L.Icon.Default.mergeOptions({
           iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
           iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
@@ -49,7 +49,7 @@ export default function MapComponent({ center, onLocationSelect }: MapComponentP
           markerRef.current = L.marker(center).addTo(mapInstanceRef.current)
 
           // Handle map clicks
-          mapInstanceRef.current.on("click", (e: any) => {
+          mapInstanceRef.current.on("click", (e: L.LeafletMouseEvent) => {
             onLocationSelect(e.latlng.lat, e.latlng.lng)
           })
         }

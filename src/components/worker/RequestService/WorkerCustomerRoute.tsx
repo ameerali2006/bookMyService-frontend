@@ -93,7 +93,7 @@ export default function WorkerCustomerRoute({
           throw new Error("No route found in ORS response.");
         }
 
-        const coords: [number, number][] = feature.geometry.coordinates.map((c: any) => [c[1], c[0]]);
+                const coords: [number, number][] = feature.geometry.coordinates.map((c: number[]) => [c[1], c[0]]);
         setRoute(coords);
 
         const summary = feature.properties?.summary;
@@ -104,11 +104,11 @@ export default function WorkerCustomerRoute({
           setDistance("");
           setDuration("");
         }
-      } catch (err: any) {
-        if (err.name === "AbortError") {
+      } catch (err) {
+        if (err instanceof Error && err.name === "AbortError") {
           // aborted, ignore
         } else {
-          setError(err.message || "Failed to fetch route.");
+          setError(err instanceof Error ? err.message : "Failed to fetch route.");
         }
       } finally {
         setLoading(false);

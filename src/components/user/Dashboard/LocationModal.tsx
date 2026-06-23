@@ -18,6 +18,12 @@ interface LocationData {
   pincode?: string
 }
 
+interface NominatimSuggestion {
+  lat: string
+  lon: string
+  display_name: string
+}
+
 interface LocationModalProps {
   isOpen: boolean
   onClose: () => void
@@ -34,7 +40,7 @@ export function LocationModal({ isOpen, onClose, onConfirm }: LocationModalProps
   const [geoLoading, setGeoLoading] = useState(false)
 
   // 🆕 Auto-suggestion states
-  const [suggestions, setSuggestions] = useState<any[]>([])
+  const [suggestions, setSuggestions] = useState<NominatimSuggestion[]>([])
   const [isFetchingSuggestions, setIsFetchingSuggestions] = useState(false)
 
   const reverseGeocode = useCallback(async (lat: number, lng: number) => {
@@ -84,7 +90,7 @@ export function LocationModal({ isOpen, onClose, onConfirm }: LocationModalProps
   }, [location])
 
   // 🆕 When a suggestion is clicked
-  const handleSelectSuggestion = async (suggestion: any) => {
+  const handleSelectSuggestion = async (suggestion: NominatimSuggestion) => {
     const lat = parseFloat(suggestion.lat)
     const lng = parseFloat(suggestion.lon)
     setCoords({ lat, lng })

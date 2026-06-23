@@ -30,11 +30,17 @@ export const uploadToCloudinary = async (
 
     // 4️⃣ Return secure URL
     return uploadRes.data.secure_url as string;
-  } catch (error: any) {
-    console.error(
-      "Cloudinary upload failed:",
-      error.response?.data || error.message
-    );
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Cloudinary upload failed:",
+        error.response?.data || error.message
+      );
+    } else if (error instanceof Error) {
+      console.error("Cloudinary upload failed:", error.message);
+    } else {
+      console.error("Cloudinary upload failed:", error);
+    }
     throw error;
   }
 };

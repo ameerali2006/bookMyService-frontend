@@ -103,13 +103,13 @@ const fetchWorkers = async (page = 1, limit = 10, sortBy = "", sortOrder: "asc" 
 
     if (sortBy) {
       filtered.sort((a, b) => {
-        const aVal = (a as any)[sortBy]
-        const bVal = (b as any)[sortBy]
+        const aVal = sortBy in a ? a[sortBy as keyof Worker] : undefined
+        const bVal = sortBy in b ? b[sortBy as keyof Worker] : undefined
 
-        if (typeof aVal === "string") {
+        if (typeof aVal === "string" && typeof bVal === "string") {
           return sortOrder === "asc" ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal)
         }
-        if (typeof aVal === "number") {
+        if (typeof aVal === "number" && typeof bVal === "number") {
           return sortOrder === "asc" ? aVal - bVal : bVal - aVal
         }
         return 0
@@ -165,14 +165,14 @@ const fetchWorkers = async (page = 1, limit = 10, sortBy = "", sortOrder: "asc" 
       title: "Experience",
       
       sortable: true,
-      render: val => <span>{val} yrs</span>
+      render: val => <span>{val as number} yrs</span>
     },
     {
       key: "createdAt",
       title: "Joined",
       
       sortable: true,
-      render: val => <span>{new Date(val).toLocaleDateString()}</span>
+      render: val => <span>{new Date(val as string).toLocaleDateString()}</span>
     },
     {
       key: "toggle",

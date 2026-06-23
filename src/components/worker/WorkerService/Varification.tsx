@@ -107,13 +107,17 @@ export function OtpQrVerification({ bookingId, onVerified }: Props) {
           // console.debug("QR scan error:", errorMessage)
         }
       );
-    } catch (err: any) {
+    } catch (err) {
       console.error("Camera error:", err);
 
-      if (err.name === "OverconstrainedError") {
+      const errorName = err instanceof Error || (err && typeof err === "object" && "name" in err)
+        ? (err as { name: string }).name
+        : "";
+
+      if (errorName === "OverconstrainedError") {
         ErrorToast("Rear camera not available. Using default camera.");
         fallbackCamera();
-      } else if (err.name === "NotAllowedError") {
+      } else if (errorName === "NotAllowedError") {
         ErrorToast("Camera permission denied");
       } else {
         ErrorToast("Failed to open camera");

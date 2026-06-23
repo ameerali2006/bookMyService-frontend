@@ -167,7 +167,7 @@ export default function WorkerRegistration() {
   }
   }
 
-  const validateStep = (step: number, formData: WorkerRegistrationData, setErrors: Function) => {
+  const validateStep = (step: number, formData: WorkerRegistrationData, setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>) => {
   let result
 
   if (step === 1) {
@@ -196,7 +196,7 @@ export default function WorkerRegistration() {
     setCurrentStep: (cb: (prev: number) => number) => void,
     totalSteps: number,
     formData: WorkerRegistrationData,
-    setErrors: Function
+    setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>
   ) => {
     if (validateStep(currentStep, formData, setErrors)) {
       setCurrentStep((prev) => Math.min(prev + 1, totalSteps))
@@ -212,7 +212,7 @@ export default function WorkerRegistration() {
   const handleSubmit = async (
     currentStep: number,
     formData: WorkerRegistrationData,
-    setErrors: Function
+    setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>
   ) => {
     if (validateStep(currentStep, formData, setErrors)) {
       try {
@@ -288,12 +288,13 @@ export default function WorkerRegistration() {
       }else{
         ErrorToast("Worker registeration is failed, try again")
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Worker registration failed", error)
-
-      ErrorToast(
-        error?.response?.data?.message || "Registration failed. Please try again."
-      )
+      let message = "Registration failed. Please try again.";
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        message = error.response.data.message;
+      }
+      ErrorToast(message);
     }
   }
 

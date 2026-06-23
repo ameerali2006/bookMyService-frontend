@@ -8,6 +8,11 @@ import { userService } from "@/api/UserService";
 import { ErrorToast } from "@/components/shared/Toaster";
 import { generateBookingCode } from "@/utils/booking-convert";
 
+interface PaymentVerificationData {
+  amountPaid: number;
+  type: "advance" | "final";
+}
+
 const PaymentSuccessPage: React.FC = () => {
   const navigate = useNavigate();
   const { bookingId } = useParams<{ bookingId: string }>();
@@ -16,7 +21,7 @@ const PaymentSuccessPage: React.FC = () => {
   const type: "advance" | "final" = rawType === "advance" ? "advance" : "final";
 
   const [loading, setLoading] = useState(true);
-  const [paymentData, setPaymentData] = useState<any>(null);
+  const [paymentData, setPaymentData] = useState<PaymentVerificationData | null>(null);
   const confettiRef = useRef(false);
 
   useEffect(() => {
@@ -153,7 +158,7 @@ const Info = ({
   highlight,
 }: {
   label: string;
-  value: any;
+  value: React.ReactNode;
   highlight?: boolean;
 }) => (
   <div className="flex justify-between items-center">

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 
 import { userService } from "@/api/UserService";
 import AddAddressModal from "@/components/user/Profile/AddAddress";
@@ -133,8 +134,12 @@ export default function AdvancePaymentPage() {
       } else {
         ErrorToast(res.data.message);
       }
-    } catch (error: any) {
-      ErrorToast(error?.response?.data?.message || "Wallet payment failed");
+    } catch (error) {
+      let errorMessage = "Wallet payment failed";
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      ErrorToast(errorMessage);
     } finally {
       setIsWalletPaying(false);
     }

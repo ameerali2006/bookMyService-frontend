@@ -472,7 +472,7 @@ const WorkerProfilePage: React.FC = () => {
                   <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Experience</label>
                   <Input
                     value={formData.experience || ""}
-                    onChange={(e) => setFormData({ ...formData, experience: e.target.value as any })}
+                    onChange={(e) => setFormData({ ...formData, experience: e.target.value as Worker["experience"] })}
                     className="rounded-xl border-gray-200 focus-visible:ring-blue-500 text-sm"
                   />
                 </div>

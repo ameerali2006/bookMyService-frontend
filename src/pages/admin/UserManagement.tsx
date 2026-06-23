@@ -119,8 +119,8 @@ const UserManagement: React.FC = () => {
 
     if (sortBy) {
       filtered.sort((a, b) => {
-        const aValue = (a as any)[sortBy]
-        const bValue = (b as any)[sortBy]
+        const aValue = sortBy in a ? a[sortBy as keyof User] : undefined
+        const bValue = sortBy in b ? b[sortBy as keyof User] : undefined
 
         if (typeof aValue === "string" && typeof bValue === "string") {
           return sortOrder === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue)

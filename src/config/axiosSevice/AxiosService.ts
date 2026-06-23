@@ -7,11 +7,12 @@ import axios, {
 import store from "@/redux/store";
 import { WarningToast, ErrorToast } from "@/components/shared/Toaster";
 import { ENV } from "../env/env";
+import { type UnknownAction } from "@reduxjs/toolkit";
 
 interface CreateAxiosClientOptions {
   baseURL: string;
   publicRoutes?: string[];
-  removeAuthAction: () => any;
+  removeAuthAction: () => UnknownAction;
   loginRedirect: string;
   refreshTokenEndpoint: string;
   blockedMessage?: string;
@@ -62,7 +63,7 @@ export function createAxiosClient({
       return response;
     },
 
-    async (error: AxiosError<any>) => {
+    async (error: AxiosError<{ message?: string }>) => {
       const originalRequest = error.config as InternalAxiosRequestConfig & {
         _retry?: boolean;
       };

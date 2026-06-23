@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 import {
   MapPin,
   Phone,
@@ -255,9 +256,13 @@ export function BookingDetailPage() {
       }, 1200);
 
       setPaymentMethod(null);
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      ErrorToast(error?.response?.data?.message || "Wallet payment failed");
+      let errorMessage = "Wallet payment failed";
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      ErrorToast(errorMessage);
     } finally {
       setLoadingPayment(false);
     }
@@ -291,9 +296,13 @@ export function BookingDetailPage() {
 
       // Close modal
       setCancelModalOpen(false);
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      ErrorToast(error?.response?.data?.message || "Cancel failed");
+      let errorMessage = "Cancel failed";
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      ErrorToast(errorMessage);
     } finally {
       setCancelLoading(false);
     }

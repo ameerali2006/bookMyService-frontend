@@ -24,7 +24,7 @@ interface NotificationContextType {
 
 const NotificationContext = createContext<NotificationContextType | null>(null);
 
-export const NotificationProvider = ({ children }: any) => {
+export const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
     const [socket, setSocket] = useState<ReturnType<typeof io> | null>(null);
 

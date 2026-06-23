@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -319,8 +320,12 @@ export default function WorkerBookingDetailsPage() {
       if (!response.data.success) return ErrorToast(response.data.message || "Verification failed");
       SuccessToast("Worker verified successfully");
       loadBooking();
-    } catch (error: any) {
-      ErrorToast(error?.response?.data?.message || "Something went wrong");
+    } catch (error) {
+      let errorMessage = "Something went wrong";
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      ErrorToast(errorMessage);
     }
   };
 

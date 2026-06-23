@@ -5,6 +5,8 @@ import { connectWorkerSocket } from "@/service/WorkerSocket";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+import io from "socket.io-client";
+
 interface ServiceRequest {
   id: string;
   serviceName: string;
@@ -20,13 +22,13 @@ interface ServiceRequest {
 }
 
 interface WorkerSocketContextValue {
-  socket: any;
+  socket: ReturnType<typeof io> | null;
 }
 
 const WorkerSocketContext = createContext<WorkerSocketContextValue | undefined>(undefined);
 
 export const WorkerSocketProvider = ({ workerId, children }: { workerId?: string; children: React.ReactNode }) => {
-  const [socket, setSocket] = useState<any>(null);
+  const [socket, setSocket] = useState<ReturnType<typeof io> | null>(null);
   const [queue, setQueue] = useState<ServiceRequest[]>([]);
   const [currentRequest, setCurrentRequest] = useState<ServiceRequest | null>(null);
 

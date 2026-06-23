@@ -23,8 +23,12 @@ const UserChangePasswordPage = () => {
           }else{
             ErrorToast(response.data.message)
           }
-        } catch (error: any) {
-          ErrorToast(error.response?.data?.message || "Failed to change password");
+        } catch (error) {
+          let errorMessage = "Failed to change password";
+          if (axios.isAxiosError(error) && error.response?.data?.message) {
+            errorMessage = error.response.data.message;
+          }
+          ErrorToast(errorMessage);
         } finally {
           setLoading(false);
         }

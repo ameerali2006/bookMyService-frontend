@@ -14,7 +14,7 @@ export interface TableColumn<T> {
   title: string
   sortable?: boolean
   align?: "left" | "center" | "right"
-  render?: (value: any, record: T) => React.ReactNode
+  render?: (value: unknown, record: T) => React.ReactNode
 }
 
 interface DataTableProps<T> {
@@ -79,7 +79,7 @@ export function DataTable<T extends { _id?: string }>({
         {data.map((row, index) => (
           <TableRow key={row._id ?? index}>
             {columns.map(col => {
-              const value = (row as any)[col.key]
+              const value = col.key in row ? row[col.key as keyof T] : undefined
               return (
                 <TableCell
                   key={String(col.key)}
@@ -88,7 +88,7 @@ export function DataTable<T extends { _id?: string }>({
                     col.align === "right" && "text-right"
                   )}
                 >
-                  {col.render ? col.render(value, row) : value}
+                  {col.render ? col.render(value, row) : (value as React.ReactNode)}
                 </TableCell>
               )
             })}

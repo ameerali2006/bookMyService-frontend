@@ -22,8 +22,8 @@ type OtpModalProps = {
   onClose: () => void;
   email?: string;
   role:"user"|"worker"
-  generateOtp?: (email: string) => Promise<AxiosResponse<any>>
-  verifyOtp?: (otp: string, email: string,role:"user"|"worker") => Promise<any>;
+  generateOtp?: (email: string) => Promise<AxiosResponse<{ success: boolean; message?: string }>>
+  verifyOtp?: (otp: string, email: string,role:"user"|"worker") => Promise<AxiosResponse<{ success: boolean; message?: string }>>;
 };
 
 export default function OtpModal({
