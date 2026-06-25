@@ -1,3 +1,4 @@
+import { Role, CapitalRole } from '../../config/constant/role';
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { ChatWindow } from "@/components/shared/Chat/ChatWindows";
 import { MessageInput } from "@/components/shared/Chat/MessageInput";
@@ -16,7 +17,7 @@ export default function UserChatPage() {
 
   const currentUserId = user?._id;
   const currentUserName = user?.name;
-  const userType = "User" as const;
+  const userType = CapitalRole.USER as const;
 
   const { bookingId } = useParams<{ bookingId: string }>();
 

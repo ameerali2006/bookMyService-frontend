@@ -1,3 +1,4 @@
+import { Role } from '../../config/constant/role';
 import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -97,7 +98,7 @@ const register = () => {
   const onFinalSubmit = async () => {
    ;
     try {
-      const response=await authService.register({...storedFormValues as FormValues,role:"user"});
+      const response=await authService.register({...storedFormValues as FormValues,role:Role.USER});
       if(response.data.success){
         SuccessToast("successfully registered !!");
         dispatch(addUser(response.data.userData))
@@ -239,7 +240,7 @@ const register = () => {
                     </FormItem>
                   )}
                 />
-                <GoogleLoginComponent userType='user' />
+                <GoogleLoginComponent userType=Role.USER />
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? (
@@ -264,7 +265,7 @@ const register = () => {
           </CardFooter>
         </Card>
         <OtpModal
-          role='user'
+          role=Role.USER
           isOpen={isOtpModalOpen}
           onClose={() => setIsOtpModalOpen(false)}
           onFinalSubmit={onFinalSubmit}

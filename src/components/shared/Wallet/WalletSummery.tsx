@@ -1,5 +1,6 @@
 "use client"
 
+import { Role, CapitalRole } from '../../../config/constant/role';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertCircle, TrendingUp } from "lucide-react"
 import type { Wallet } from "./WalletPage"
@@ -12,7 +13,7 @@ interface WalletSummaryProps {
 export function WalletSummary({ wallet }: WalletSummaryProps) {
   const getRoleLabel = () => {
     switch (wallet.role) {
-      case "User":
+      case CapitalRole.USER:
         return "Wallet Balance"
       case "Worker":
         return "Total Earnings"

@@ -1,3 +1,4 @@
+import { Role } from '../../config/constant/role';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from '../../components/shared/Login'
 
@@ -18,7 +19,7 @@ function Login() {
     password: string;
     
   }):Promise<SubmitResult> => {
-  const response = await authService.login({...values,role:"user"});
+  const response = await authService.login({...values,role:Role.USER});
     console.log('working....');
     console.log(response.data.success);
     
@@ -48,7 +49,7 @@ function Login() {
     {/* Right login section */}
     <div className="flex justify-center items-center w-full lg:w-1/2 p-4">
       <div className="w-full max-w-md sm:max-w-lg md:max-w-xl"> {/* Control width here */}
-        <LoginForm onSubmit={handleUserLogin} role="user" />
+        <LoginForm onSubmit={handleUserLogin} role=Role.USER />
       </div>
     </div>
   </div>

@@ -1,3 +1,4 @@
+import { Role } from '../../config/constant/role';
 import {
   GoogleOAuthProvider,
   GoogleLogin,
@@ -40,7 +41,7 @@ const GoogleLoginComponent = ({ userType, onGoogleSuccess }: GoogleLoginComponen
       if (response.data.success) {
         const {name,email}=response.data.user
         
-        if(userType=="user"){
+        if(userType==Role.USER){
           dispatch(addUser(response.data.user));
           navigate("/user/")
         }

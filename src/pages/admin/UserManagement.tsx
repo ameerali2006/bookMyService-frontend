@@ -1,5 +1,6 @@
 "use client"
 
+import { Role, CapitalRole } from '../../config/constant/role';
 import type React from "react"
 import { useState, useMemo, useEffect } from "react"
 import Navbar from "@/components/admin/Navbar"
@@ -186,7 +187,7 @@ const UserManagement: React.FC = () => {
 
   const columns: TableColumn<User>[] = [
     {
-      key: "user",
+      key: Role.USER,
       title: "User",
       
       sortable: true,
@@ -200,7 +201,7 @@ const UserManagement: React.FC = () => {
           </Avatar>
           <div>
             <p className="font-medium text-gray-900 dark:text-gray-100">{record.name}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{record.role || 'User'}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{record.role || CapitalRole.USER}</p>
           </div>
         </div>
       ),

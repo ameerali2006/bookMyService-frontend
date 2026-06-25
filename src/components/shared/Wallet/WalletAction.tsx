@@ -1,5 +1,6 @@
 "use client"
 
+import { Role, CapitalRole } from '../../../config/constant/role';
 import { Button } from "@/components/ui/button"
 import { CreditCard, TrendingDown, Eye, Settings } from "lucide-react"
 
@@ -13,7 +14,7 @@ export function WalletActions({ role, isFrozen, onOpenModal }: WalletActionsProp
   return (
     <div className="flex flex-wrap gap-3">
       {/* User Actions */}
-      {role === "User" && (
+      {role === CapitalRole.USER && (
         <Button onClick={() => onOpenModal("topup")} className="gap-2" size="lg">
           <CreditCard className="h-4 w-4" />
           Add Money

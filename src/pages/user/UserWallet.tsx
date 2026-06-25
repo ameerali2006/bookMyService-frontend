@@ -1,3 +1,4 @@
+import { Role, CapitalRole } from '../../config/constant/role';
 import { userService } from "@/api/UserService"
 import { WalletPage, type Wallet, } from "@/components/shared/Wallet/WalletPage"
 
@@ -50,7 +51,7 @@ export const metadata = {
           <h1 className="text-4xl font-bold tracking-tight">Wallet Management</h1>
           <p className="mt-2 text-muted-foreground">Manage your funds and view your transaction history</p>
         </div>      
-        <WalletPage role={"User"} wallet={wallet} fetchTransactions={fetchUserTransactions} />
+        <WalletPage role={CapitalRole.USER} wallet={wallet} fetchTransactions={fetchUserTransactions} />
       </div>
     </main>
   )

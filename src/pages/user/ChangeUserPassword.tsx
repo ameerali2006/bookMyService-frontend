@@ -1,5 +1,6 @@
 "use client";
 
+import { Role } from '../../config/constant/role';
 import React, { useState } from "react";
 
 import axios from "axios";
@@ -40,7 +41,7 @@ const UserChangePasswordPage = () => {
 
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <ChangePasswordForm
-        role="user"
+        role=Role.USER
         onSubmit={handleChangePassword}
         loading={loading}
       />

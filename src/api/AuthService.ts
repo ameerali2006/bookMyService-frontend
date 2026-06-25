@@ -1,3 +1,4 @@
+import { Role } from '../config/constant/role';
 import userAxios from "@/config/axiosSevice/UserAxios";
 import adminAxios from "@/config/axiosSevice/AdminAxios";
 import workerAxios from "@/config/axiosSevice/WorkerAxios";
@@ -18,7 +19,7 @@ export const authService = {
   register: async (formData: RegisterPayload & { role: string }) => {
     return await userAxios.post("/register", formData);
   },
-  googleLogin: async (token: string, role: "user") => {
+  googleLogin: async (token: string, role: Role.USER) => {
     console.log("google>login");
     let dat = await userAxios.post("/google-login", { token, role });
     console.log("dfddffarra", dat.data);
@@ -30,7 +31,7 @@ export const authService = {
   login: async (credentials: {
     email: string;
     password: string;
-    role: "user";
+    role: Role.USER;
   }) => {
     return await userAxios.post("/login", credentials);
   },
