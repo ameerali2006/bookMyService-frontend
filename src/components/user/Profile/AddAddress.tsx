@@ -2,6 +2,7 @@
 
 import { userService } from "@/api/UserService"
 import { ErrorToast, SuccessToast } from "@/components/shared/Toaster"
+import { API_ROUTES } from "@/constants/apiRoutes"
 import type { RootState } from "@/redux/store"
 import React from "react"
 import { useSelector } from "react-redux"
@@ -64,7 +65,7 @@ export default function  AddAddressModal({ open, onClose, initialData }: Props) 
   const reverseGeocode = async (lat: number, lng: number) => {
     try {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=en`
+        API_ROUTES.LOCATION.REVERSE_GEOCODE(lat, lng)
       )
       const data = await res.json()
 

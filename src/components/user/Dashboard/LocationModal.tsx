@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { MapPin, Search, Loader2, Navigation } from "lucide-react"
 import { ErrorToast, SuccessToast, WarningToast } from "@/components/shared/Toaster"
+import { API_ROUTES } from "@/constants/apiRoutes"
 
 const MapComponent = lazy(() => import("../../shared/Map"))
 
@@ -46,7 +47,7 @@ export function LocationModal({ isOpen, onClose, onConfirm }: LocationModalProps
   const reverseGeocode = useCallback(async (lat: number, lng: number) => {
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=en`,
+        API_ROUTES.LOCATION.REVERSE_GEOCODE_WITH_DETAILS(lat, lng),
       )
       const data = await response.json()
       if (data && data.address) {
@@ -75,7 +76,7 @@ export function LocationModal({ isOpen, onClose, onConfirm }: LocationModalProps
       setIsFetchingSuggestions(true)
       try {
         const res = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=5&addressdetails=1&accept-language=en`
+          API_ROUTES.LOCATION.SEARCH_WITH_DETAILS(location, 5)
         )
         const data = await res.json()
         setSuggestions(data)
@@ -107,7 +108,7 @@ export function LocationModal({ isOpen, onClose, onConfirm }: LocationModalProps
     setLoading(true)
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=1&accept-language=en`,
+        API_ROUTES.LOCATION.SEARCH(location, 1),
       )
       const data = await response.json()
       if (data && data.length > 0) {

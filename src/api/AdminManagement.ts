@@ -1,5 +1,6 @@
 import adminAxios from "@/config/axiosSevice/AdminAxios";
 import type { WalletTransactionQuery } from "@/interface/shared/wallet";
+import { API_ROUTES } from "@/constants/apiRoutes";
 
 export const adminManagement = {
   getAllUsers: async (
@@ -9,12 +10,12 @@ export const adminManagement = {
     sortBy?: string,
     sortOrder?: "asc" | "desc",
   ) => {
-    return await adminAxios.get("/users", {
+    return await adminAxios.get(API_ROUTES.ADMIN.GET_USERS, {
       params: { page, limit, search, sortBy, sortOrder },
     });
   },
   updateUserStatus: async (userId: string, isActive: boolean) => {
-    return await adminAxios.patch(`/users/${userId}/status`, { isActive });
+    return await adminAxios.patch(API_ROUTES.ADMIN.UPDATE_USER_STATUS(userId), { isActive });
   },
   getAllWorkers: async (
     page: number,
@@ -23,20 +24,20 @@ export const adminManagement = {
     sortOrder?: "asc" | "desc",
     search?: string,
   ) => {
-    return await adminAxios.get("/workers", {
+    return await adminAxios.get(API_ROUTES.ADMIN.GET_WORKERS, {
       params: { page, limit, sortBy, sortOrder, search },
     });
   },
   updateWorkerStatus: async (workerId: string, isActive: boolean) => {
-    return await adminAxios.patch(`/workers/${workerId}/status`, { isActive });
+    return await adminAxios.patch(API_ROUTES.ADMIN.UPDATE_WORKER_STATUS(workerId), { isActive });
   },
   getUnverifiedWorkers: async (page: number, pageSize: number) => {
-    return await adminAxios.get("/workers/unverified", {
+    return await adminAxios.get(API_ROUTES.ADMIN.GET_UNVERIFIED_WORKERS, {
       params: { page, pageSize },
     });
   },
   verifyWorker: async (workerId: string, status: "approved" | "rejected") => {
-    return await adminAxios.patch(`/workers/${workerId}/unverified`, {
+    return await adminAxios.patch(API_ROUTES.ADMIN.VERIFY_WORKER(workerId), {
       status,
     });
   },
@@ -46,12 +47,12 @@ export const adminManagement = {
     page: number,
     limit: number,
   ) => {
-    return await adminAxios.get("/services", {
+    return await adminAxios.get(API_ROUTES.SERVICE.GET_ADMIN_SERVICES, {
       params: { search, sort, page, limit },
     });
   },
   getCloudinarySignature: async (folder:string) => {
-    return await adminAxios.get("/cloudinary-signature",{params:{folder}});
+    return await adminAxios.get(API_ROUTES.CLOUDINARY.SIGNATURE,{params:{folder}});
   },
   createService: async (data: {
     category: string;
@@ -61,10 +62,10 @@ export const adminManagement = {
     duration: number;
     image: string;
   }) => {
-    return await adminAxios.post("/services/create", data);
+    return await adminAxios.post(API_ROUTES.SERVICE.CREATE, data);
   },
   updateServiceStatus: async (id: string, status: "active" | "inactive") => {
-    return await adminAxios.patch(`/services/${id}/status`, { status });
+    return await adminAxios.patch(API_ROUTES.SERVICE.UPDATE_STATUS(id), { status });
   },
   getBookings: async (params: {
     search?: string;
@@ -78,24 +79,24 @@ export const adminManagement = {
     page?: number;
     limit?: number;
   }) => {
-    return await adminAxios.get("/bookings", {
+    return await adminAxios.get(API_ROUTES.BOOKING.GET_ADMIN_BOOKINGS, {
       params,
     });
   },
   getBookingDetailPage: async (bookingId: string) => {
     console.log(bookingId);
-    return await adminAxios.get(`/booking/${bookingId}`);
+    return await adminAxios.get(API_ROUTES.BOOKING.GET_ADMIN_BOOKING_DETAILS(bookingId));
   },
   adminWalletData: async () => {
-    return await adminAxios.get("/wallet/walletData");
+    return await adminAxios.get(API_ROUTES.ADMIN.WALLET_DATA);
   },
   getAdminTransactions: async (query: WalletTransactionQuery) => {
-    return await adminAxios.get(`/wallet/transactions`, { params: query });
+    return await adminAxios.get(API_ROUTES.ADMIN.TRANSACTIONS, { params: query });
   },
   getDashBoard: async () => {
-    return await adminAxios.get(`/dashboard`);
+    return await adminAxios.get(API_ROUTES.DASHBOARD.ADMIN);
   },
   getReviews: async ({search,sort}:{search:string,sort:string,page:number,limit:number}) => {
-    return await adminAxios.get(`/reviews`,{params:{search,sort}});
+    return await adminAxios.get(API_ROUTES.REVIEW.GET_ADMIN_REVIEWS,{params:{search,sort}});
   },
 };

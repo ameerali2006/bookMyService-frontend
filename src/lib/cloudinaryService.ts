@@ -1,5 +1,6 @@
 import axios from "axios";
 import { authService } from "@/api/AuthService";
+import { API_ROUTES } from "@/constants/apiRoutes";
 
 /**
  * Reusable Cloudinary upload function
@@ -22,7 +23,7 @@ export const uploadToCloudinary = async (
     formData.append("folder", data.folder);
 
     // 3️⃣ Upload to Cloudinary
-    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${data.cloudName}/auto/upload`;
+    const cloudinaryUrl = API_ROUTES.CLOUDINARY.AUTO_UPLOAD_URL(data.cloudName);
 
     const uploadRes = await axios.post(cloudinaryUrl, formData, {
       headers: { "Content-Type": "multipart/form-data" },

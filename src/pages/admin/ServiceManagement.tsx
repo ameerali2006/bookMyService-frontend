@@ -16,6 +16,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import Navbar from "@/components/admin/Navbar";
 import Sidebar from "@/components/admin/Sidebar";
 import { adminManagement } from "@/api/AdminManagement";
+import { API_ROUTES } from "@/constants/apiRoutes";
 import {
   Dialog,
   DialogContent,
@@ -155,7 +156,7 @@ export default function ServiceManagement() {
     formDataCloud.append("signature", signature);
     formDataCloud.append("folder", "worker-documents");
     const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      API_ROUTES.CLOUDINARY.IMAGE_UPLOAD_URL(cloudName),
       { method: "POST", body: formDataCloud }
     );
     

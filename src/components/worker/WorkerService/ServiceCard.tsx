@@ -7,7 +7,6 @@ import { Card } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { getTimeBasedIndicator } from "@/utils/timeUtils"
 import { useNavigate } from "react-router-dom"
-import { API_ENDPOINTS } from "@/config/constant/apiEndpoint"
 import { WORKER_ROUTES } from "@/config/constant/routes/workerRoutes"
 import { generateBookingCode } from "@/utils/booking-convert"
 

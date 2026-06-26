@@ -1,6 +1,8 @@
 import type { ChangePasswordInput } from "@/components/shared/ChangePassword";
 import workerAxios from "@/config/axiosSevice/WorkerAxios";
 import type { WalletTransactionQuery } from "@/interface/shared/wallet";
+import { API_ROUTES } from "@/constants/apiRoutes";
+
 type Break = {
   label: string;
   breakStart: string;
@@ -47,13 +49,13 @@ export type PayLoad = {
 };
 export const workerService = {
   getWorkingDetails: async (email: string) => {
-    return await workerAxios.get(`/profile/slot?email=${email}`);
+    return await workerAxios.get(API_ROUTES.WORKER.GET_SLOT(email));
   },
   updateWorkingDetails: async (email: string, payload: PayLoad) => {
-    return await workerAxios.post(`/profile/slot/update`, { email, payload });
+    return await workerAxios.post(API_ROUTES.WORKER.UPDATE_SLOT, { email, payload });
   },
   getProfileDetails: async () => {
-    return await workerAxios.get(`/profile/details`);
+    return await workerAxios.get(API_ROUTES.WORKER.DETAILS);
   },
   updateProfileDetails: async (payload: {
     name?: string;
@@ -65,28 +67,28 @@ export const workerService = {
     image?: string;
   }) => {
     console.log(payload);
-    return await workerAxios.put(`/profile/update`, payload);
+    return await workerAxios.put(API_ROUTES.WORKER.UPDATE, payload);
   },
   changePassword: async (payload: ChangePasswordInput) => {
-    return await workerAxios.put(`/profile/changePassword`, payload);
+    return await workerAxios.put(API_ROUTES.WORKER.CHANGE_PASSWORD, payload);
   },
   getCalenderData: async () => {
-    return await workerAxios.get(`/calender/getData`);
+    return await workerAxios.get(API_ROUTES.WORKER.CALENDAR_GET);
   },
   updateCalenderData: async (data: {
     holidays: IHoliday[];
     customSlots: ICustomSlot[];
   }) => {
-    return await workerAxios.put("/calender/update", data);
+    return await workerAxios.put(API_ROUTES.WORKER.CALENDAR_UPDATE, data);
   },
   serviceApprove: async (data: ApprovalData) => {
-    return await workerAxios.put("/service/approve", data);
+    return await workerAxios.put(API_ROUTES.BOOKING.SERVICE_APPROVE, data);
   },
   serviceReject: async (data: { description: string; bookingId: string }) => {
-    return await workerAxios.put("/service/reject", data);
+    return await workerAxios.put(API_ROUTES.BOOKING.SERVICE_REJECT, data);
   },
   serviceRequest: async (data: IRequestFilters) => {
-    return await workerAxios.get(`/service/requests`, { params: data });
+    return await workerAxios.get(API_ROUTES.BOOKING.SERVICE_REQUESTS, { params: data });
   },
   getApprovedServices: async (params: {
     page: number;
@@ -94,19 +96,19 @@ export const workerService = {
     search?: string;
     status?: string;
   }) => {
-    return await workerAxios.get(`/service/approveds`, { params });
+    return await workerAxios.get(API_ROUTES.BOOKING.SERVICE_APPROVEDS, { params });
   },
   getBookingDetails: async (bookingId: string) => {
-    return await workerAxios.get(`/service/approveds/${bookingId}`);
+    return await workerAxios.get(API_ROUTES.BOOKING.SERVICE_APPROVEDS_DETAILS(bookingId));
   },
   reachedCustomerLocation: async (bookingId: string) => {
-    return await workerAxios.get(`/service/reach-location/${bookingId}`);
+    return await workerAxios.get(API_ROUTES.BOOKING.REACH_LOCATION(bookingId));
   },
   verifyWorker: async (bookingId: string, otp: string) => {
-    return await workerAxios.put("/service/verify-worker", { bookingId, otp });
+    return await workerAxios.put(API_ROUTES.BOOKING.VERIFY_WORKER, { bookingId, otp });
   },
   workComplated: async (bookingId: string) => {
-    return await workerAxios.patch("/service/work-complated", { bookingId });
+    return await workerAxios.patch(API_ROUTES.BOOKING.WORK_COMPLETED, { bookingId });
   },
   allBookings: async (params: {
     page: number;
@@ -117,7 +119,7 @@ export const workerService = {
     from?: Date;
     to?: Date;
   }) => {
-    return await workerAxios.get("/service/allBookings", {
+    return await workerAxios.get(API_ROUTES.BOOKING.ALL_BOOKINGS, {
       params: {
         page: params.page,
         limit: params.limit,
@@ -130,33 +132,33 @@ export const workerService = {
     });
   },
   workerWalletData: async () => {
-    return await workerAxios.get("/profile/walletData");
+    return await workerAxios.get(API_ROUTES.WORKER.WALLET_DATA);
   },
   getWorkerTransactions: async (query: WalletTransactionQuery) => {
-    return await workerAxios.get(`/profile/transactions`, { params: query });
+    return await workerAxios.get(API_ROUTES.WORKER.TRANSACTIONS, { params: query });
   },
   getWorkerInbox: async (workerId: string) => {
-    return await workerAxios.get("/chat/chatInbox", { params: { workerId } });
+    return await workerAxios.get(API_ROUTES.CHAT.INBOX, { params: { workerId } });
   },
   chatHistory: async (chatId: string, limit: number, skip: number) => {
     console.log("cahjdsfjdsfjds");
-    return await workerAxios.get(`/chat/chatHistory`, {
+    return await workerAxios.get(API_ROUTES.CHAT.HISTORY, {
       params: { chatId, limit, skip },
     });
   },
   getDashboard: async () => {
-    return await workerAxios.get("/dashboard");
+    return await workerAxios.get(API_ROUTES.DASHBOARD.WORKER);
   },
   getNotifications: async () => {
-      return await workerAxios.get("/notifications");
+      return await workerAxios.get(API_ROUTES.NOTIFICATION.GET);
     },
   
     markAsRead: async (notificationId: string) => {
-      return await workerAxios.patch(`/notifications/${notificationId}/read`);
+      return await workerAxios.patch(API_ROUTES.NOTIFICATION.MARK_READ(notificationId));
     },
   
    
     markAllAsRead: async () => {
-      return await workerAxios.patch("/notifications/read-all");
+      return await workerAxios.patch(API_ROUTES.NOTIFICATION.MARK_ALL_READ);
     },
 };

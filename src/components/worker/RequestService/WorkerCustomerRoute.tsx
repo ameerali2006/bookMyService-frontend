@@ -3,6 +3,7 @@ import L from "leaflet";
 import { useEffect, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import { ENV } from "@/config/env/env";
+import { API_ROUTES } from "@/constants/apiRoutes";
 
 type Location = {
   lat: number;
@@ -68,7 +69,7 @@ export default function WorkerCustomerRoute({
           return;
         }
 
-        const url = `https://api.openrouteservice.org/v2/directions/driving-car?start=${workerLocation.lng},${workerLocation.lat}&end=${customerLocation.lng},${customerLocation.lat}`;
+        const url = API_ROUTES.LOCATION.DRIVING_CAR(workerLocation.lng, workerLocation.lat, customerLocation.lng, customerLocation.lat);
 
         const res = await fetch(url, {
           method: "GET",

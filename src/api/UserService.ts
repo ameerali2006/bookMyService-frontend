@@ -2,6 +2,7 @@ import type { ChangePasswordInput } from "@/components/shared/ChangePassword";
 import userAxios from "@/config/axiosSevice/UserAxios";
 import type { WalletTransactionQuery } from "@/interface/shared/wallet";
 import type { Numerals } from "react-day-picker";
+import { API_ROUTES } from "@/constants/apiRoutes";
 
 export interface AddressForm {
   label: "Home" | "Work" | "Shop";
@@ -41,7 +42,7 @@ export interface UpdatePaymentStatusInput {
 
 export const userService = {
   getUserDetails: async () => {
-    return await userAxios.get("/profile/userDetails");
+    return await userAxios.get(API_ROUTES.USER.DETAILS);
   },
   updateUserDetails: async (
     user: Partial<{
@@ -51,7 +52,7 @@ export const userService = {
       image?: string;
     }>,
   ) => {
-    return await userAxios.put("/profile/updateUserDetails", user);
+    return await userAxios.put(API_ROUTES.USER.UPDATE, user);
   },
   getWorkersNearBy: async (
     search: string = "",
@@ -62,7 +63,7 @@ export const userService = {
     lat: number,
     lng: number,
   ) => {
-    return await userAxios.get("/workers/nearby", {
+    return await userAxios.get(API_ROUTES.WORKER.NEARBY, {
       params: {
         search,
         sort,
@@ -75,16 +76,16 @@ export const userService = {
     });
   },
   getWorkerAvailability: async (workerId: string) => {
-    return await userAxios.get(`/workers/availability?workerId=${workerId}`);
+    return await userAxios.get(API_ROUTES.WORKER.AVAILABILITY(workerId));
   },
   getUserAddress: async () => {
-    return await userAxios.get("/addresses");
+    return await userAxios.get(API_ROUTES.LOCATION.GET_ADDRESSES);
   },
   addUserAddress: async (data: AddressForm) => {
-    return await userAxios.post("/addAddress", data);
+    return await userAxios.post(API_ROUTES.LOCATION.ADD_ADDRESS, data);
   },
   setPrimaryAddress: async (toSetId: string) => {
-    return await userAxios.put("/address/setPrimary", { toSetId });
+    return await userAxios.put(API_ROUTES.LOCATION.SET_PRIMARY, { toSetId });
   },
   selectDateTimeAvailablity: async (data: {
     time: string;
@@ -92,81 +93,81 @@ export const userService = {
     description: string;
     workerId: string;
   }) => {
-    return await userAxios.post("/basicBookingDetails", data);
+    return await userAxios.post(API_ROUTES.BOOKING.BASIC_DETAILS, data);
   },
   getBookingDetails: async (bookingId: string) => {
-    return await userAxios.get("/getBoookingDetails", {
+    return await userAxios.get(API_ROUTES.BOOKING.GET_DETAILS, {
       params: { bookingId },
     });
   },
   createPaymentIntent: async (data: CreatePaymentIntentInput) => {
-    return await userAxios.post("/payment/create-payment-intent", data);
+    return await userAxios.post(API_ROUTES.PAYMENT.CREATE_INTENT, data);
   },
   updatePaymentStatus: async (data: UpdatePaymentStatusInput) => {
-    return await userAxios.post("/payment/webhook", data);
+    return await userAxios.post(API_ROUTES.PAYMENT.WEBHOOK, data);
   },
   changePassword: async (payload: ChangePasswordInput) => {
-    return await userAxios.put(`/profile/changePassword`, payload);
+    return await userAxios.put(API_ROUTES.USER.CHANGE_PASSWORD, payload);
   },
   verifyPayment: async (bookingId: string, type: "advance" | "final") => {
     return await userAxios.get(
-      `/payment/verify?bookingId=${bookingId}&paymentType=${type}`,
+      API_ROUTES.PAYMENT.VERIFY(bookingId, type),
     );
   },
   getBookingList: async (limit: number, page: number, search: string) => {
-    return await userAxios.get(`/bookings/ongoing`, {
+    return await userAxios.get(API_ROUTES.BOOKING.ONGOING, {
       params: { limit, page, search },
     });
   },
   bookingDetailData: async (bookingId: string) => {
-    return await userAxios.get(`/bookings/ongoing/${bookingId}`);
+    return await userAxios.get(API_ROUTES.BOOKING.ONGOING_DETAILS(bookingId));
   },
   userWalletData: async () => {
-    return await userAxios.get("/profile/walletData");
+    return await userAxios.get(API_ROUTES.USER.WALLET_DATA);
   },
   getUserTransactions: async (query: WalletTransactionQuery) => {
-    return await userAxios.get(`/profile/transactions`, { params: query });
+    return await userAxios.get(API_ROUTES.USER.TRANSACTIONS, { params: query });
   },
   getChatId: async (bookingId: string) => {
     console.log("dffdfd");
-    return await userAxios.get(`/chat/chatId`, { params: { bookingId } });
+    return await userAxios.get(API_ROUTES.CHAT.GET_ID, { params: { bookingId } });
   },
   chatHistory: async (chatId: string, limit: number, skip: number) => {
     console.log("cahjdsfjdsfjds");
-    return await userAxios.get(`/chat/chatHistory`, {
+    return await userAxios.get(API_ROUTES.CHAT.HISTORY, {
       params: { chatId, limit, skip },
     });
   },
   getInbox: async (userId: string) => {
-    return await userAxios.get("/chat/chatInbox", { params: { userId } });
+    return await userAxios.get(API_ROUTES.CHAT.INBOX, { params: { userId } });
   },
   addReview: async (comment: string, rating: number, bookingId: string) => {
-    return await userAxios.post("/review/addReview", {
+    return await userAxios.post(API_ROUTES.REVIEW.ADD, {
       comment,
       rating,
       bookingId,
     });
   },
    walletPayment:async (data: { bookingId: string; addressId:string, paymentType: "advance" | "final" })=> {
-    return await userAxios.post("/wallet/payment", data);
+    return await userAxios.post(API_ROUTES.PAYMENT.WALLET_PAYMENT, data);
   },
   getWorkerProfile: async (workerId: string) => {
-    return await userAxios.get("/workers/workerProfile", { params: { workerId } });
+    return await userAxios.get(API_ROUTES.WORKER.PROFILE, { params: { workerId } });
   },
   getNotifications: async () => {
-    return await userAxios.get("/notifications");
+    return await userAxios.get(API_ROUTES.NOTIFICATION.GET);
   },
 
   markAsRead: async (notificationId: string) => {
-    return await userAxios.patch(`/notifications/${notificationId}/read`);
+    return await userAxios.patch(API_ROUTES.NOTIFICATION.MARK_READ(notificationId));
   },
 
  
   markAllAsRead: async () => {
-    return await userAxios.patch("/notifications/read-all");
+    return await userAxios.patch(API_ROUTES.NOTIFICATION.MARK_ALL_READ);
   },
   cancelBooking: async (bookingId:string,data:{reason:string}) => {
-    return await userAxios.patch(`/booking/${bookingId}/cancel`,data);
+    return await userAxios.patch(API_ROUTES.BOOKING.CANCEL(bookingId),data);
   },
 
 };

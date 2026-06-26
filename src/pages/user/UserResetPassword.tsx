@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 const UserResetPassword = () => {
   const { token } = useParams();
 
-  return <ResetPasswordForm role=Role.USER token={token} />;
+  return <ResetPasswordForm role={Role.USER} token={token} />;
 };
 
 export default UserResetPassword;

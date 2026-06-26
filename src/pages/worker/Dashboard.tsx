@@ -23,6 +23,7 @@ import { Navbar } from '@/components/worker/Dashboard/WorkerNavbar';
 import type { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+import { API_ROUTES } from '@/constants/apiRoutes';
 import { authService } from '@/api/AuthService';
 import { ErrorToast } from '@/components/shared/Toaster';
 import { updateLocation } from '@/redux/slice/userTokenSlice';
@@ -68,7 +69,7 @@ export default function WorkerDashboard() {
       try {
         // Reverse GEO API (OpenStreetMap)
         const res = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=en`
+          API_ROUTES.LOCATION.REVERSE_GEOCODE(latitude, longitude)
         );
         const data = await res.json();
 

@@ -24,6 +24,7 @@ import {Step1Schema,Step2Schema,Step3Schema,} from "@/protected/validation/worke
 import OtpModal from "@/components/shared/OtpModal"; // adjust path as needed
 import {authService} from "@/api/AuthService";
 import axios from "axios"
+import { API_ROUTES } from "@/constants/apiRoutes";
 
 import "leaflet/dist/leaflet.css";
 import { ErrorToast, SuccessToast } from "@/components/shared/Toaster"
@@ -146,7 +147,7 @@ export default function WorkerRegistration() {
     formDataPayload.append("folder", data.folder);
 
     // 3. Upload to Cloudinary
-    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${data.cloudName}/auto/upload`;
+    const cloudinaryUrl = API_ROUTES.CLOUDINARY.AUTO_UPLOAD_URL(data.cloudName);
 
     const uploadRes = await axios.post(cloudinaryUrl, formDataPayload, {
       headers: {
@@ -245,7 +246,7 @@ export default function WorkerRegistration() {
 
         try {
           const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=en`
+            API_ROUTES.LOCATION.REVERSE_GEOCODE(latitude, longitude)
           );
           const data = await response.json();
           console.log(data)

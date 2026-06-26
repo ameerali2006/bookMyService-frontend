@@ -1,9 +1,11 @@
+import { API_ROUTES } from "@/constants/apiRoutes";
+
 export const PUBLIC_ROUTES = [
-  "/login",
-  "/register",
-  "/generate-otp",
-  "/verify-otp",
-  "/google-login",
-  "/forgot-password",
-  "/reset-password"
+  API_ROUTES.AUTH.LOGIN,
+  API_ROUTES.AUTH.REGISTER,
+  API_ROUTES.AUTH.GENERATE_OTP,
+  API_ROUTES.AUTH.VERIFY_OTP,
+  API_ROUTES.AUTH.GOOGLE_LOGIN,
+  API_ROUTES.AUTH.FORGOT_PASSWORD,
+  API_ROUTES.AUTH.RESET_PASSWORD
 ];

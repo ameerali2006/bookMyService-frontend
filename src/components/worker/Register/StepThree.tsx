@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet"
 import React from "react"
 import type { WorkerRegistrationData } from "@/protected/validation/worker/registerZod"
+import { API_ROUTES } from "@/constants/apiRoutes"
 
 
 type Props = {
@@ -37,7 +38,7 @@ export default function Step3({
             longitude: lng.toFixed(6),
           }));
   
-          fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=en`)
+          fetch(API_ROUTES.LOCATION.REVERSE_GEOCODE(lat, lng))
             .then((res) => res.json())
             .then((data) => {
               const city = data?.address?.city || data?.address?.town || data?.address?.village || "";

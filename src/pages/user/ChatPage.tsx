@@ -17,7 +17,7 @@ export default function UserChatPage() {
 
   const currentUserId = user?._id;
   const currentUserName = user?.name;
-  const userType = CapitalRole.USER as const;
+  const userType = CapitalRole.USER;
 
   const { bookingId } = useParams<{ bookingId: string }>();
 

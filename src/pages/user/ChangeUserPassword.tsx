@@ -2,7 +2,6 @@
 
 import { Role } from '../../config/constant/role';
 import React, { useState } from "react";
-
 import axios from "axios";
 import ChangePasswordForm, { type ChangePasswordInput } from "@/components/shared/ChangePassword";
 import { ErrorToast, SuccessToast } from "@/components/shared/Toaster";
@@ -12,40 +11,40 @@ import Header from "@/components/user/shared/Header";
 
 const UserChangePasswordPage = () => {
   const [loading, setLoading] = useState(false);
-      const navigate= useNavigate()
+  const navigate = useNavigate();
+
   const handleChangePassword = async (data: ChangePasswordInput) => {
     setLoading(true);
     try {
-          const response=await userService.changePassword(data)
-          if(response.data.success){
-            SuccessToast(response.data.message)
-            navigate("/profile")
-           
-          }else{
-            ErrorToast(response.data.message)
-          }
-        } catch (error) {
-          let errorMessage = "Failed to change password";
-          if (axios.isAxiosError(error) && error.response?.data?.message) {
-            errorMessage = error.response.data.message;
-          }
-          ErrorToast(errorMessage);
-        } finally {
-          setLoading(false);
-        }
+      const response = await userService.changePassword(data);
+      if (response.data.success) {
+        SuccessToast(response.data.message);
+        navigate("/profile");
+      } else {
+        ErrorToast(response.data.message);
+      }
+    } catch (error) {
+      let errorMessage = "Failed to change password";
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      ErrorToast(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return (<>
-  
-    <Header></Header>
-
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <ChangePasswordForm
-        role=Role.USER
-        onSubmit={handleChangePassword}
-        loading={loading}
-      />
-    </div></>
+  return (
+    <>
+      <Header></Header>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+        <ChangePasswordForm
+          role={Role.USER}
+          onSubmit={handleChangePassword}
+          loading={loading}
+        />
+      </div>
+    </>
   );
 };
 

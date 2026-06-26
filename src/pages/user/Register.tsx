@@ -26,7 +26,6 @@ import OtpModal from '@/components/shared/OtpModal';
 import { useDispatch } from 'react-redux';
 import { addUser } from '@/redux/slice/userTokenSlice';
 
-
 const formSchema = z
   .object({
     name: z.string().min(2, "Name must be at least 2 characters."),
@@ -60,7 +59,6 @@ const formSchema = z
 
 // Form types
 type FormValues = z.infer<typeof formSchema>;
-
 
 const register = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -96,7 +94,6 @@ const register = () => {
     }
   };
   const onFinalSubmit = async () => {
-   ;
     try {
       const response=await authService.register({...storedFormValues as FormValues,role:Role.USER});
       if(response.data.success){
@@ -187,7 +184,6 @@ const register = () => {
                 )}
               />
 
-
                 <FormField
                   control={form.control}
                   name="password"
@@ -240,7 +236,7 @@ const register = () => {
                     </FormItem>
                   )}
                 />
-                <GoogleLoginComponent userType=Role.USER />
+                <GoogleLoginComponent userType={Role.USER} />
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? (
@@ -265,7 +261,7 @@ const register = () => {
           </CardFooter>
         </Card>
         <OtpModal
-          role=Role.USER
+          role={Role.USER}
           isOpen={isOtpModalOpen}
           onClose={() => setIsOtpModalOpen(false)}
           onFinalSubmit={onFinalSubmit}
@@ -278,4 +274,4 @@ const register = () => {
   )
 }
 
-export default register
+export default register;
