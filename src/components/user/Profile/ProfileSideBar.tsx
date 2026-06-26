@@ -12,9 +12,9 @@ interface ProfileSidebarProps {
 
 const sidebarItems = [
   { id: "profile" as Section, label: "Profile", icon: User },
-  { id: "services-taken" as Section, label: "Services Taken", icon: Calendar },
+  // { id: "services-taken" as Section, label: "Services Taken", icon: Calendar },
   { id: "wallet" as Section, label: "Wallet", icon: Wallet },
-  { id: "reviews" as Section, label: "Reviews", icon: Star },
+  // { id: "reviews" as Section, label: "Reviews", icon: Star },
   { id: "addresses" as Section, label: "Addresses", icon: MapPin },
 ]
 

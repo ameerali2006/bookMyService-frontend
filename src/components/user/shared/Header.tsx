@@ -267,7 +267,7 @@ const Header = () => {
         onMarkAllRead={handleMarkAllRead}
         onNotificationClick={(notification) => {
     if (notification.bookingId) {
-      navigate(`/user/bookings/${notification.bookingId}`);
+      navigate(`/bookings/${notification.bookingId}`);
     }
   }}
       />
