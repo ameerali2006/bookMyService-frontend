@@ -3,7 +3,7 @@ import { Mail, ArrowLeft, Send } from 'lucide-react';
 // import logo from "@/assets/user/logo.png";
 import { useNavigate } from 'react-router-dom';
 import {authService} from '@/api/AuthService'
-import { WarningToast } from './Toaster';
+import { ErrorToast, WarningToast } from './Toaster';
 
 interface ForgotPasswordFormProps {
   role: 'user' | 'worker';
@@ -15,7 +15,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ role, onBack })
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
-  const logo="/placeholder.svg?height=44&width=57"
+  const logo="https://res.cloudinary.com/dp1sx1dx2/image/upload/v1782728581/logo_qiw52y.jpg"
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +25,10 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ role, onBack })
       const result =await (role === 'user' ? authService.userResetLink : authService.workerResetLink)(email);
       console.log(result)
       if(!result.data.success){
+        if(result.data.message=="Invalid credentials."){
+          ErrorToast(result.data.message)
+          return
+        }
         console.log('xvdxchvbxkcjvkkjbkjb')
         WarningToast(result.data.message)
         role=='user'?navigate("/login"):navigate("/worker/login")
@@ -52,7 +56,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ role, onBack })
                   className="max-w-full max-h-full object-contain"
                 />
               </div>
-            </div>
+            </div> 
 
             <div className="bg-green-100 rounded-full p-4 w-16 h-16 flex items-center justify-center mx-auto mb-6">
               <Mail className="h-8 w-8 text-green-600" />
@@ -69,7 +73,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ role, onBack })
                 onClick={() => navigate(role === 'user' ? '/login' : '/worker/login')}
                 className="w-full bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors font-semibold"
               >
-                Back to Login
+                Back to Login 
               </button>
 
               <p className="text-sm text-gray-500">
