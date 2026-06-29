@@ -13,5 +13,6 @@ export const USER_ROUTES = {
   },
   
   WALLET:"/wallet",
-  CHAT:"/chat/:bookingId"
+  CHAT:"/chat/:bookingId",
+  WORKER_DETAILS: "/workers/:id"
 };

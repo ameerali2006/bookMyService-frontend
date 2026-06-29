@@ -113,7 +113,7 @@ export default function WorkerListingPage() {
       const res = await userService.getWorkerProfile(worker._id);
         console.log(res.data)
       if (res.data.success) {
-        setSelectedWorker(res.data.data);
+        setSelectedWorker({...res.data.data,distance:worker.distance});
       }
     } catch (error) {
       console.error("Failed to fetch worker profile", error);

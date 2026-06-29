@@ -27,6 +27,8 @@ import ContactPage from "./pages/user/Contact";
 const Register = lazy(()=>import("./pages/user/Register"))
 const Homepage = lazy(()=>import("./pages/user/Home"))
 const  Login   = lazy(()=>import("./pages/user/Login")) ;
+const WorkerDetailsPage = lazy(() => import("./pages/user/WorkerDetails"));
+
 
 
 const User = () => {
@@ -69,6 +71,10 @@ const User = () => {
         <Route
           path={USER_ROUTES.SERVICES.LIST}
           element={<WorkerListingPage />}
+        />
+        <Route
+          path={USER_ROUTES.WORKER_DETAILS}
+          element={<WorkerDetailsPage />}
         />
         <Route
           path={USER_ROUTES.SERVICES.BOOK_DETAILS}
