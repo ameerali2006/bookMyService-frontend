@@ -17,6 +17,7 @@ import { WorkerLayout } from "@/components/worker/Dashboard/WorkerLayout";
 import { ErrorToast } from "@/components/shared/Toaster";
 import { workerService } from "@/api/WorkerService";
 import { Pagination } from "@/components/ui/Pagination";
+import { cn } from "@/lib/utils";
 
 
 interface ServiceRequest {
@@ -99,20 +100,20 @@ export default function WorkerRequestsPage() {
     <WorkerLayout>
       <Navbar />
 
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen bg-slate-50/50 pt-24 pb-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-1">
             Service Requests
           </h1>
-          <p className="text-muted-foreground mb-6">
+          <p className="text-slate-500 text-sm mb-6">
             Manage all service requests assigned to you
           </p>
 
           {/* Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
             {/* Search Bar */}
-            <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-4 py-2 col-span-2">
-              <Search className="w-5 h-5 text-muted-foreground" />
+            <div className="flex items-center gap-2 border border-slate-200 rounded-xl px-4 py-2 col-span-2 bg-slate-50 focus-within:bg-white focus-within:border-blue-500 transition-all">
+              <Search className="w-5 h-5 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search by service, customer, or location..."
@@ -121,14 +122,14 @@ export default function WorkerRequestsPage() {
                   setPage(1);
                   setSearch(e.target.value);
                 }}
-                className="flex-1 bg-transparent outline-none text-foreground placeholder-muted-foreground"
+                className="flex-1 bg-transparent outline-none text-slate-800 placeholder-slate-400 text-sm"
               />
             </div>
 
             {/* Date Filter */}
             <input
               type="date"
-              className="border border-border rounded-lg px-3 py-2 bg-card"
+              className="border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 text-slate-700 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none"
               value={date}
               onChange={(e) => {
                 setPage(1);
@@ -139,54 +140,62 @@ export default function WorkerRequestsPage() {
 
           {/* Loader */}
           {loading && (
-            <div className="text-center py-20 text-muted-foreground">
-              Loading...
+            <div className="text-center py-20 text-slate-400 font-semibold">
+              Loading requests...
             </div>
           )}
 
           {/* Cards Grid */}
           {!loading && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {requests.map((request) => (
                 <Card
                   key={request.id}
-                  className="hover:shadow-lg transition-shadow cursor-pointer"
+                  className="rounded-3xl border border-slate-100 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
                   onClick={() => setSelectedRequest(request)}
                 >
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
+                  <CardHeader className="p-6 pb-4">
+                    <div className="flex justify-between items-start gap-2">
                       <div>
-                        <CardTitle className="text-lg">
+                        <CardTitle className="text-base font-bold text-slate-800 leading-snug">
                           {request.serviceName}
                         </CardTitle>
-                        <CardDescription>{request.userName}</CardDescription>
+                        <CardDescription className="text-xs text-slate-400 font-medium mt-1">
+                          Client: {request.userName}
+                        </CardDescription>
                       </div>
 
                       <Badge
-                        className={`${getStatusColor(request.status)} border`}
+                        className={cn(
+                          "rounded-full font-bold text-[10px] px-2.5 py-0.5 border shrink-0",
+                          request.status === "approved"
+                            ? "bg-green-50 text-green-700 border-green-200"
+                            : request.status === "pending"
+                            ? "bg-amber-50 text-amber-700 border-amber-200"
+                            : "bg-red-50 text-red-700 border-red-200"
+                        )}
                       >
                         {request.status}
                       </Badge>
                     </div>
                   </CardHeader>
 
-                  <CardContent>
-                    <div className="text-sm flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">
-                        {request.date}
-                      </span>
-                      <span className="font-medium">{request.time}</span>
+                  <CardContent className="px-6 pb-6">
+                    <div className="text-xs flex items-center gap-2 text-slate-500 font-medium">
+                      <Clock className="w-4 h-4 text-slate-400" />
+                      <span>{request.date}</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+                      <span>{request.time}</span>
                     </div>
 
-                    <div className="text-sm mt-1 flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-muted-foreground" />
+                    <div className="text-xs mt-2.5 flex items-center gap-2 text-slate-500 font-medium">
+                      <MapPin className="w-4 h-4 text-rose-500" />
                       <span className="truncate">{request.location}</span>
                     </div>
 
                     <Button
                       variant="outline"
-                      className="w-full mt-4"
+                      className="w-full mt-5 rounded-xl border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
                         setSelectedRequest(request);
@@ -202,8 +211,8 @@ export default function WorkerRequestsPage() {
 
           {/* Empty State */}
           {!loading && requests.length === 0 && (
-            <div className="text-center py-20 text-muted-foreground">
-              No requests found.
+            <div className="text-center py-20 text-slate-400 font-medium italic">
+              No requests assigned to you yet.
             </div>
           )}
 

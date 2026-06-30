@@ -171,174 +171,172 @@ export default function AdvancePaymentPage() {
       ErrorToast("Failed to initialize Stripe payment");
     }
   };
-
   return (
-    <main className="min-h-[100dvh] bg-white">
-      <div className="w-full border-b border-border bg-background">
-        
-      </div>
+    <main className="min-h-[100dvh] bg-slate-50 pb-24">
+      
 
-      <section className="mx-auto max-w-6xl grid grid-cols-1 pt-20 md:grid-cols-2 gap-6 p-6 bg-white">
-        {/* Left: Address Selection */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-foreground text-pretty">
-            Select Address
-          </h2>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-28">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Left: Address Selection */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-slate-800 px-1">
+              Select Service Address
+            </h2>
 
-          {addresses.length > 0 ? (
-            <>
-              <form   className="space-y-3 max-h-[350px] overflow-y-auto pr-2"
-  aria-label="Saved addresses">
-                {addresses.map((addr) => (
-                  <label key={addr._id} className="block">
-                    <Card
-                      className={cn(
-                        "shadow-lg rounded-2xl p-4 border border-border transition-colors cursor-pointer bg-white",
-                        selectedAddressId === addr._id
-                          ? "ring-2 ring-ring bg-gray-300"
-                          : "hover:bg-accent hover:text-accent-foreground",
-                      )}
-                    >
-                      <div className="flex items-start gap-3">
-                        <input
-                          type="radio"
-                          name="address"
-                          className="mt-1 h-4 w-4 accent-yellow-400"
-                          checked={selectedAddressId === addr._id}
-                          onChange={() => setSelectedAddressId(addr._id)}
-                        />
-                        <div className="space-y-1">
-                          <p className="font-medium">{addr.label}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {`${addr.buildingName}, ${addr.street}, ${addr.area}, ${addr.city}`}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            Phone: {addr.phone}
-                          </p>
+            {addresses.length > 0 ? (
+              <div className="space-y-4">
+                <form className="space-y-4 max-h-[400px] overflow-y-auto pr-2" aria-label="Saved addresses">
+                  {addresses.map((addr) => (
+                    <label key={addr._id} className="block cursor-pointer">
+                      <Card
+                        className={cn(
+                          "rounded-2xl p-5 border transition-all duration-200 bg-white shadow-sm hover:shadow-md",
+                          selectedAddressId === addr._id
+                            ? "border-blue-500 ring-2 ring-blue-50/50 bg-blue-50/10"
+                            : "border-slate-100 hover:border-slate-200",
+                        )}
+                      >
+                        <div className="flex items-start gap-4">
+                          <input
+                            type="radio"
+                            name="address"
+                            className="mt-1 h-4 w-4 accent-blue-600 cursor-pointer"
+                            checked={selectedAddressId === addr._id}
+                            onChange={() => setSelectedAddressId(addr._id)}
+                          />
+                          <div className="space-y-1">
+                            <span className="inline-block text-[11px] font-extrabold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                              {addr.label}
+                            </span>
+                            <p className="text-sm text-slate-600 leading-relaxed mt-2">
+                              {`${addr.buildingName}, ${addr.street}, ${addr.area}, ${addr.city}`}
+                            </p>
+                            <p className="text-xs text-slate-400 font-medium">
+                              Phone: {addr.phone}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </Card>
-                  </label>
-                ))}
-              </form>
+                      </Card>
+                    </label>
+                  ))}
+                </form>
 
-              {/* Add Address Button */}
+                {/* Add Address Button */}
+                <Button
+                  onClick={() => setShowAddAddressModal(true)}
+                  className="w-full h-11 border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 transition cursor-pointer font-semibold"
+                  variant="outline"
+                >
+                  + Add New Address
+                </Button>
+              </div>
+            ) : (
               <Button
                 onClick={() => setShowAddAddressModal(true)}
-                className="w-full mt-2"
-                variant="outline"
+                className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition cursor-pointer shadow-md"
               >
-                + Add New Address
+                + Add Address
               </Button>
-            </>
-          ) : (
-            <Button
-              onClick={() => setShowAddAddressModal(true)}
-              className="w-full"
-            >
-              + Add Address
-            </Button>
-          )}
-        </div>
+            )}
+          </div>
 
-        {/* Right: Booking Details & Payment */}
-        <div className="space-y-6 ">
-          {/* Booking Details */}
-          <Card className="shadow-lg rounded-2xl p-4  border border-border bg-gray-50">
-            <h3 className="text-lg font-semibold text-foreground mb-3">
-              Booking Details
-            </h3>
-            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              <div className="space-y-1">
-                <dt className="text-muted-foreground">Worker Name</dt>
-                <dd className="text-foreground">{bookingDetails.workerName}</dd>
-              </div>
-              <div className="space-y-1">
-                <dt className="text-muted-foreground">Service Name</dt>
-                <dd className="text-foreground">
-                  {bookingDetails.serviceName}
-                </dd>
-              </div>
-              <div className="space-y-1">
-                <dt className="text-muted-foreground">Date</dt>
-                <dd className="text-foreground">{bookingDetails.date}</dd>
-              </div>
-              <div className="space-y-1">
-                <dt className="text-muted-foreground">Time</dt>
-                <dd className="text-foreground">{bookingDetails.time}</dd>
-              </div>
-              <div className="sm:col-span-2 space-y-1">
-                <dt className="text-muted-foreground">Description</dt>
-                <dd className="text-foreground">
-                  {bookingDetails.description}
-                </dd>
-              </div>
-              <div className="sm:col-span-2 flex items-center justify-between pt-2 border-t border-border">
-                <dt className="font-medium text-foreground">Total Price</dt>
-                <dd className="font-semibold text-foreground">
-                  To be decided after work
-                </dd>
-              </div>
-            </dl>
-          </Card>
-
-          {/* Bill Summary + Payment */}
-          {!showStripePayment ? (
-            <Card className="shadow-lg rounded-2xl p-4 bg-gray-100 border border-border">
-              <h3 className="text-lg font-semibold text-foreground mb-3">
-                Bill Summary
+          {/* Right: Booking Details & Payment */}
+          <div className="space-y-6">
+            {/* Booking Details */}
+            <Card className="rounded-3xl p-6 border border-slate-100 bg-white shadow-sm">
+              <h3 className="text-lg font-bold text-slate-800 mb-4 pb-2 border-b border-slate-50">
+                Booking Details
               </h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Total Amount</span>
-                  <span className="text-foreground">₹--</span>
+              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6 text-sm">
+                <div className="space-y-1">
+                  <dt className="text-xs text-slate-400 font-medium uppercase tracking-wider">Worker Name</dt>
+                  <dd className="text-slate-800 font-bold">{bookingDetails.workerName}</dd>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">
-                    Advance to Pay Now
-                  </span>
-                  <span className="font-semibold text-foreground">
-                    ₹{bookingDetails.advance}
-                  </span>
+                <div className="space-y-1">
+                  <dt className="text-xs text-slate-400 font-medium uppercase tracking-wider">Service Name</dt>
+                  <dd className="text-slate-800 font-bold">{bookingDetails.serviceName}</dd>
                 </div>
-              </div>
-
-              {addresses.length > 0 && (
-                <div className="mt-4 space-y-2">
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    className="w-full hover:bg-gray-300"
-                    onClick={handleWalletPay}
-                    disabled={!selectedAddressId || isWalletPaying}
-                  >
-                    {isWalletPaying
-                      ? "Processing..."
-                      : `Pay ₹${bookingDetails.advance} via Wallet`}
-                  </Button>
-                  <Button
-                    type="button"
-                    className="w-full bg-blue-900 hover:bg-blue-800"
-                    onClick={handleStripePay} // <── FIXED
-                    disabled={!selectedAddressId}
-                  >
-                    Pay ₹{bookingDetails.advance} via Stripe
-                  </Button>
+                <div className="space-y-1">
+                  <dt className="text-xs text-slate-400 font-medium uppercase tracking-wider">Date</dt>
+                  <dd className="text-slate-600 font-semibold">{bookingDetails.date}</dd>
                 </div>
-              )}
+                <div className="space-y-1">
+                  <dt className="text-xs text-slate-400 font-medium uppercase tracking-wider">Time</dt>
+                  <dd className="text-slate-600 font-semibold">{bookingDetails.time}</dd>
+                </div>
+                <div className="sm:col-span-2 space-y-1 pt-2 border-t border-slate-50">
+                  <dt className="text-xs text-slate-400 font-medium uppercase tracking-wider">Description</dt>
+                  <dd className="text-slate-600 text-sm leading-relaxed italic">
+                    "{bookingDetails.description || 'No instructions provided.'}"
+                  </dd>
+                </div>
+                <div className="sm:col-span-2 flex items-center justify-between pt-4 border-t border-slate-100 mt-2">
+                  <dt className="font-bold text-slate-800">Total Price</dt>
+                  <dd className="font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full text-xs">
+                    To be decided after work
+                  </dd>
+                </div>
+              </dl>
             </Card>
-          ) : (
-            // Replace Bill Summary with Stripe Payment
-            clientSecret && (
-              <PaymentWrapper
-                clientSecret={clientSecret}
-                paymentType="advance"
-                bookingId={bookingId}
-              />
-            )
-          )}
-        </div>
-      </section>
+
+            {/* Bill Summary + Payment */}
+            {!showStripePayment ? (
+              <Card className="rounded-3xl p-6 bg-white border border-slate-100 shadow-sm">
+                <h3 className="text-lg font-bold text-slate-800 mb-4 pb-2 border-b border-slate-50">
+                  Bill Summary
+                </h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-center justify-between text-slate-500">
+                    <span>Total Amount</span>
+                    <span>₹--</span>
+                  </div>
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-50">
+                    <span className="text-slate-800 font-semibold">Advance to Pay Now</span>
+                    <span className="text-lg font-extrabold text-slate-900">
+                      ₹{bookingDetails.advance}
+                    </span>
+                  </div>
+                </div>
+
+                {addresses.length > 0 && (
+                  <div className="mt-6 space-y-3">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="w-full h-11 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl transition cursor-pointer font-bold"
+                      onClick={handleWalletPay}
+                      disabled={!selectedAddressId || isWalletPaying}
+                    >
+                      {isWalletPaying
+                        ? "Processing..."
+                        : `Pay ₹${bookingDetails.advance} via Wallet`}
+                    </Button>
+                    <Button
+                      type="button"
+                      className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition cursor-pointer font-bold shadow-md shadow-blue-100"
+                      onClick={handleStripePay}
+                      disabled={!selectedAddressId}
+                    >
+                      Pay ₹{bookingDetails.advance} via Card (Stripe)
+                    </Button>
+                  </div>
+                )}
+              </Card>
+            ) : (
+              // Replace Bill Summary with Stripe Payment
+              clientSecret && (
+                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                  <PaymentWrapper
+                    clientSecret={clientSecret}
+                    paymentType="advance"
+                    bookingId={bookingId}
+                  />
+                </div>
+              )
+            )}
+          </div>
+        </section>
+      </div>
 
       {showAddAddressModal && (
         <AddAddressModal
@@ -349,8 +347,6 @@ export default function AdvancePaymentPage() {
           }}
         />
       )}
-
-      
     </main>
   );
 }

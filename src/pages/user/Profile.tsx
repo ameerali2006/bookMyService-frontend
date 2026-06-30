@@ -42,19 +42,16 @@ export function ProfilePage() {
   return (
     <>
       <Header />
+      <div className="min-h-screen bg-slate-50">
+        <ProfileSidebar
+          activeSection={activeSection}
+          onSectionChange={setActiveSection}
+        />
 
-      
-        <div className="min-h-screen bg-background pt-15">
-          <ProfileSidebar
-            activeSection={activeSection}
-            onSectionChange={setActiveSection}
-          />
-
-          <main className="bg-white p-6 lg:p-10 ml-64 min-h-screen">
-            <div className="max-w-6xl">{renderContent()}</div>
-          </main>
-        </div>
-      
+        <main className="bg-white p-6 lg:p-10 pt-36 lg:pt-28 lg:pl-72 min-h-screen">
+          <div className="max-w-5xl mx-auto">{renderContent()}</div>
+        </main>
+      </div>
     </>
   );
 }

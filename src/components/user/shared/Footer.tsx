@@ -2,100 +2,96 @@ import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react"
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-800 text-white py-12">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Open Designers Column */}
-          <div>
-            <h3 className="text-lg font-bold mb-4">Open Designers</h3>
-            <p className="text-gray-300 text-sm mb-4">
-              Open Service is second-hand free to provide fresh design and development services to help you achieve your
-              goals and objectives. We are committed to providing the best service to our clients and partners.
+    <footer className="bg-slate-900 border-t border-slate-800 text-slate-400 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
+          {/* Logo & About Column */}
+          <div className="space-y-4">
+            <div className="flex items-center">
+              <span className="text-xl font-extrabold text-white tracking-tight">bookMyService</span>
+            </div>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Premium and transparent home services on demand. Connecting you with verified local service providers for plumbing, electrical, cleaning, and beauty jobs.
             </p>
-            <div className="flex space-x-4">
-              <Facebook className="w-5 h-5 cursor-pointer hover:text-yellow-400 transition-colors" />
-              <Twitter className="w-5 h-5 cursor-pointer hover:text-yellow-400 transition-colors" />
-              <Instagram className="w-5 h-5 cursor-pointer hover:text-yellow-400 transition-colors" />
-              <Linkedin className="w-5 h-5 cursor-pointer hover:text-yellow-400 transition-colors" />
+            <div className="flex space-x-4 pt-2">
+              <Facebook className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
+              <Twitter className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
+              <Instagram className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
+              <Linkedin className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
             </div>
           </div>
 
-          {/* Explore Column */}
+          {/* Quick links Column */}
           <div>
-            <h3 className="text-lg font-bold mb-4">Explore</h3>
-            <ul className="space-y-2 text-sm text-gray-300">
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Services</h3>
+            <ul className="space-y-3 text-sm">
               <li>
-                <a href="#" className="hover:text-yellow-400 transition-colors">
-                  Explore Designers
+                <a href="#" className="hover:text-white transition-colors">
+                  Cleaning Services
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-yellow-400 transition-colors">
-                  Explore Design
+                <a href="#" className="hover:text-white transition-colors">
+                  Beauty & Salon
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-yellow-400 transition-colors">
-                  Explore Services
+                <a href="#" className="hover:text-white transition-colors">
+                  Appliance Repair
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-yellow-400 transition-colors">
-                  Explore Projects
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-yellow-400 transition-colors">
-                  Reports
+                <a href="#" className="hover:text-white transition-colors">
+                  Pest Control
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* Innovate Column */}
+          {/* Business Column */}
           <div>
-            <h3 className="text-lg font-bold mb-4">Innovate</h3>
-            <ul className="space-y-2 text-sm text-gray-300">
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">For Partners</h3>
+            <ul className="space-y-3 text-sm">
               <li>
-                <a href="#" className="hover:text-yellow-400 transition-colors">
-                  App
+                <a href="#" className="hover:text-white transition-colors">
+                  Register as a Partner
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-yellow-400 transition-colors">
-                  Plan
+                <a href="#" className="hover:text-white transition-colors">
+                  Partner Dashboard
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-yellow-400 transition-colors">
-                  Cloud Services
+                <a href="#" className="hover:text-white transition-colors">
+                  Service Standards
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* About Column */}
+          {/* Company Column */}
           <div>
-            <h3 className="text-lg font-bold mb-4">About</h3>
-            <ul className="space-y-2 text-sm text-gray-300">
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Company</h3>
+            <ul className="space-y-3 text-sm">
               <li>
-                <a href="#" className="hover:text-yellow-400 transition-colors">
-                  Company
+                <a href="#" className="hover:text-white transition-colors">
+                  About Us
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-yellow-400 transition-colors">
+                <a href="#" className="hover:text-white transition-colors">
                   Careers
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-yellow-400 transition-colors">
-                  Support
+                <a href="#" className="hover:text-white transition-colors">
+                  Terms of Service
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-yellow-400 transition-colors">
-                  Terms of service
+                <a href="#" className="hover:text-white transition-colors">
+                  Privacy Policy
                 </a>
               </li>
             </ul>
@@ -103,23 +99,20 @@ export default function Footer() {
         </div>
 
         {/* Bottom Footer Bar */}
-        <div className="border-t border-gray-700 mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex flex-wrap gap-6 text-sm text-gray-300 mb-4 md:mb-0">
-              <a href="#" className="hover:text-yellow-400 transition-colors">
-                Categories
+        <div className="border-t border-slate-800 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex flex-wrap gap-6 text-sm text-slate-400">
+              <a href="#" className="hover:text-white transition-colors">
+                Safety Center
               </a>
-              <a href="#" className="hover:text-yellow-400 transition-colors">
-                Community
+              <a href="#" className="hover:text-white transition-colors">
+                Help & Support
               </a>
-              <a href="#" className="hover:text-yellow-400 transition-colors">
-                Resources
-              </a>
-              <a href="#" className="hover:text-yellow-400 transition-colors">
-                Contact
+              <a href="#" className="hover:text-white transition-colors">
+                Sitemap
               </a>
             </div>
-            <div className="text-sm text-gray-400">© 2024 bookMyService. All rights reserved.</div>
+            <div className="text-sm text-slate-500">© 2026 bookMyService. All rights reserved.</div>
           </div>
         </div>
       </div>

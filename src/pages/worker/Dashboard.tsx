@@ -29,6 +29,7 @@ import { ErrorToast } from '@/components/shared/Toaster';
 import { updateLocation } from '@/redux/slice/userTokenSlice';
 import type { WorkerDashboardResponse } from '@/interface/worker/dashboard.types';
 import { workerService } from '@/api/WorkerService';
+import { cn } from '@/lib/utils';
 
 export default function WorkerDashboard() {
   const [data, setData] = useState<WorkerDashboardResponse | null>(null);
@@ -154,21 +155,21 @@ if (data?.workerStatus === "rejected") {
   return (
     <WorkerLayout>
       <Navbar />
-      <div className="p-8 space-y-8 bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="min-h-screen bg-slate-50/50 p-4 sm:p-6 lg:p-8 space-y-8">
         {/* Welcome */}
         <div className="fade-slide-in">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
             <div>
-              <h1 className="text-4xl font-bold text-foreground mb-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">
                 Welcome back, {worker?.name || 'Superstar'}! 👷‍♂️
               </h1>
-              <p className="text-muted-foreground text-lg">
+              <p className="text-slate-500 text-sm">
                 Here's your job summary for today.
               </p>
             </div>
-            <div className="text-right">
-              <p className="text-sm text-muted-foreground">Today</p>
-              <p className="text-2xl font-bold text-foreground">
+            <div className="text-left sm:text-right bg-white p-4 rounded-2xl border border-slate-100 shadow-sm min-w-[150px]">
+              <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">Today</p>
+              <p className="text-lg font-extrabold text-slate-800 mt-1">
                 {new Date().toLocaleDateString('en-US', {
                   weekday: 'long',
                   month: 'short',
@@ -180,90 +181,94 @@ if (data?.workerStatus === "rejected") {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <WorkerStatsCard
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <WorkerStatsCard
             title="Total Jobs"
             value={data?.stats.totalJobs.toString() || "0"}
             change={`${data?.stats.todayJobs || 0} today`}
             trend="up"
-            icon={<Wrench className="h-5 w-5 text-black" />}
+            icon={<Wrench className="h-5 w-5 text-blue-600" />}
           />
 
-                <WorkerStatsCard
+          <WorkerStatsCard
             title="Monthly Earnings"
             value={`₹${data?.stats.monthlyEarnings || 0}`}
             change={`${data?.stats.upcomingJobs || 0} upcoming`}
             trend="up"
-            icon={<DollarSign className="h-5 w-5 text-black" />}
+            icon={<DollarSign className="h-5 w-5 text-blue-600" />}
           />
 
-                  <WorkerStatsCard
+          <WorkerStatsCard
             title="Upcoming Jobs"
             value={data?.stats.upcomingJobs.toString() || "0"}
             change="Active bookings"
             trend="neutral"
-            icon={<Calendar className="h-5 w-5 text-black" />}
+            icon={<Calendar className="h-5 w-5 text-blue-600" />}
           />
 
-                    <WorkerStatsCard
+          <WorkerStatsCard
             title="Rating"
             value={`${data?.stats.averageRating || 0} / 5`}
             change={`${data?.stats.totalReviews || 0} reviews`}
             trend="up"
-            icon={<CheckCircle className="h-5 w-5 text-black" />}
+            icon={<CheckCircle className="h-5 w-5 text-blue-600" />}
           />
-
         </div>
 
         {/* Schedule + Side Column */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Schedule */}
           <div className="lg:col-span-2 fade-slide-in">
-            <Card className="h-full bg-white border-0 shadow-lg">
-              <CardHeader>
-                <div className="flex justify-between">
-                  <CardTitle className="text-xl font-bold text-foreground">
+            <Card className="h-full bg-white border border-slate-100 rounded-3xl shadow-sm overflow-hidden">
+              <CardHeader className="border-b border-slate-50 p-6 pb-4">
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-lg font-bold text-slate-800">
                     Today’s Jobs
                   </CardTitle>
-                  <Badge className="bg-black text-white">5 total</Badge>
+                  <Badge className="bg-slate-900 text-white rounded-full font-bold text-xs px-2.5 py-0.5">Active schedule</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {data?.todaySchedule.map((job) => (
-                  <div
-                    key={job.bookingId}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="text-center">
-                        <p className="text-sm font-semibold text-foreground">
-                          {job.time}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-medium text-foreground">
-                          {job.service}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {job.clientName}
-                        </p>
-                      </div>
-                    </div>
-
-                    <Badge
-                      className={
-                        job.status === "completed"
-                          ? "bg-green-100 text-green-800 border-green-200"
-                          : job.status === "in-progress"
-                          ? "bg-blue-100 text-blue-800 border-blue-200"
-                          : "bg-gray-100 text-gray-800 border-gray-200"
-                      }
+              <CardContent className="p-6 space-y-4">
+                {data?.todaySchedule && data.todaySchedule.length > 0 ? (
+                  data.todaySchedule.map((job) => (
+                    <div
+                      key={job.bookingId}
+                      className="flex items-center justify-between p-4 bg-slate-50/50 hover:bg-slate-50 border border-slate-100/50 rounded-2xl transition duration-200"
                     >
-                      {job.status}
-                    </Badge>
-                  </div>
-                ))}
+                      <div className="flex items-center gap-4">
+                        <div className="text-left">
+                          <p className="text-sm font-bold text-slate-800">
+                            {job.time}
+                          </p>
+                        </div>
+                        <div className="w-px h-8 bg-slate-200" />
+                        <div>
+                          <p className="font-bold text-slate-800 text-sm">
+                            {job.service}
+                          </p>
+                          <p className="text-xs text-slate-400 font-medium">
+                            Client: {job.clientName}
+                          </p>
+                        </div>
+                      </div>
 
+                      <Badge
+                        className={cn(
+                          "rounded-full font-bold text-xs px-2.5 py-0.5 border",
+                          job.status === "completed"
+                            ? "bg-green-50 text-green-700 border-green-200"
+                            : job.status === "in-progress"
+                            ? "bg-blue-50 text-blue-700 border-blue-200"
+                            : "bg-slate-50 text-slate-700 border-slate-200"
+                        )}
+                      >
+                        {job.status}
+                      </Badge>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center text-slate-400 text-sm italic py-10">No jobs scheduled for today.</p>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -271,60 +276,58 @@ if (data?.workerStatus === "rejected") {
           {/* Quick Actions & Performance */}
           <div className="space-y-6">
             {/* Quick Actions */}
-            <Card className="bg-black text-white border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-lg font-bold">Quick Actions</CardTitle>
+            <Card className="bg-slate-900 text-white border-0 rounded-3xl shadow-lg p-2">
+              <CardHeader className="p-6 pb-4">
+                <CardTitle className="text-base font-bold text-white">Quick Actions</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <Button className="w-full bg-white text-black hover:bg-gray-100 justify-start">
-                  <Clock className="h-4 w-4 mr-2" />
+              <CardContent className="px-6 pb-6 space-y-3">
+                <Button className="w-full h-11 bg-white text-slate-900 hover:bg-slate-50 justify-start rounded-xl font-bold transition cursor-pointer shadow-sm">
+                  <Clock className="h-4 w-4 mr-2 text-blue-600" />
                   Start Job
                 </Button>
-                <Button className="w-full bg-white/10 text-white hover:bg-white/20 justify-start">
-                  <MessageCircle className="h-4 w-4 mr-2" />
+                <Button className="w-full h-11 bg-white/10 text-white hover:bg-white/20 justify-start rounded-xl font-bold transition cursor-pointer border border-white/5">
+                  <MessageCircle className="h-4 w-4 mr-2 text-blue-400" />
                   Chat with Client
                 </Button>
-                <Button className="w-full bg-white/10 text-white hover:bg-white/20 justify-start">
-                  <Zap className="h-4 w-4 mr-2" />
+                <Button className="w-full h-11 bg-white/10 text-white hover:bg-white/20 justify-start rounded-xl font-bold transition cursor-pointer border border-white/5">
+                  <Zap className="h-4 w-4 mr-2 text-yellow-400" />
                   View Earnings
                 </Button>
               </CardContent>
             </Card>
 
             {/* Performance */}
-            <Card className="bg-white border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-lg font-bold text-foreground flex items-center gap-2">
-                  <Activity className="h-5 w-5" />
-                  Performance
+            <Card className="bg-white border border-slate-100 rounded-3xl shadow-sm">
+              <CardHeader className="p-6 pb-4">
+                <CardTitle className="text-base font-bold text-slate-800 flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-blue-600" />
+                  Performance Metrics
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="p-6 space-y-6">
                 <div className="space-y-4">
                   <div>
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-muted-foreground">Job Efficiency</span>
-                      <span className="font-medium text-foreground">{data?.stats.efficiency || 0}%</span>
+                    <div className="flex justify-between text-xs font-semibold mb-2">
+                      <span className="text-slate-400 uppercase tracking-wider">Job Efficiency</span>
+                      <span className="text-slate-850">{data?.stats.efficiency || 0}%</span>
                     </div>
-                    <Progress value={data?.stats.efficiency || 0} />
-
+                    <Progress value={data?.stats.efficiency || 0} className="h-2" />
                   </div>
                   <div>
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-muted-foreground">Client Satisfaction</span>
-                      <span className="font-medium text-foreground">{data?.stats.satisfaction || 0}%</span>
+                    <div className="flex justify-between text-xs font-semibold mb-2">
+                      <span className="text-slate-400 uppercase tracking-wider">Client Satisfaction</span>
+                      <span className="text-slate-850">{data?.stats.satisfaction || 0}%</span>
                     </div>
-                    <Progress value={data?.stats.satisfaction || 0} />
-
+                    <Progress value={data?.stats.satisfaction || 0} className="h-2" />
                   </div>
                 </div>
-                <Separator />
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <Separator className="bg-slate-100" />
+                <div className="flex items-center justify-between p-3 bg-slate-50 border border-slate-100/50 rounded-xl">
                   <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-indigo-600" />
-                    <span className="text-sm font-medium text-foreground">Most Rated Worker</span>
+                    <Users className="h-4 w-4 text-blue-600" />
+                    <span className="text-xs font-bold text-slate-700">Most Rated Worker</span>
                   </div>
-                  <Badge className="bg-indigo-100 text-indigo-800 border-indigo-200">This Month</Badge>
+                  <Badge className="bg-blue-50 text-blue-700 border border-blue-100 rounded-full font-bold text-[10px] px-2 py-0.5">This Month</Badge>
                 </div>
               </CardContent>
             </Card>

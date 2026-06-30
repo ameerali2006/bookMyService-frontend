@@ -268,67 +268,105 @@ const UserManagement: React.FC = () => {
   }), [users])
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50 pt-15">
       <Sidebar activeItem={activeMenuItem} onItemClick={handleMenuItemClick} onLogout={handleLogout} />
       <Navbar userName="Admin" onSearch={handleSearch} />
-      <main className="ml-64 pt-16 p-6">
+      <main className="lg:ml-64 pt-24 p-4 sm:p-6 lg:p-8">
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">User Management</h1>
-              <p className="text-gray-600 dark:text-gray-400">Manage users, roles, and account status</p>
+              <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">User Management</h1>
+              <p className="text-slate-500 text-sm mt-0.5">Manage users, roles, and account status</p>
             </div>
-            <Button variant="outline" onClick={handleExport}>
-              <Download className="h-4 w-4 mr-2" /> Export
-            </Button>
+            {/* <Button
+              variant="outline"
+              onClick={handleExport}
+              className="rounded-xl border-slate-200 hover:bg-slate-50 font-semibold cursor-pointer h-10 text-slate-700 w-full sm:w-auto"
+            >
+              <Download className="h-4 w-4 mr-2 text-blue-600" /> Export
+            </Button> */}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card><CardContent className="p-6"><p>Total Users: {stats.totalUsers}</p></CardContent></Card>
-            <Card><CardContent className="p-6"><p>Active Users: {stats.activeUsers}</p></CardContent></Card>
-            <Card><CardContent className="p-6"><p>Blocked Users: {stats.blockedUsers}</p></CardContent></Card>
-            <Card><CardContent className="p-6"><p>Google Users: {stats.googleUsers}</p></CardContent></Card>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="rounded-3xl border border-slate-100 shadow-sm bg-white p-6">
+              <CardContent className="p-0">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Users</span>
+                <p className="text-2xl font-extrabold text-slate-800 mt-1">{stats.totalUsers}</p>
+              </CardContent>
+            </Card>
+            <Card className="rounded-3xl border border-slate-100 shadow-sm bg-white p-6">
+              <CardContent className="p-0">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Users</span>
+                <p className="text-2xl font-extrabold text-green-600 mt-1">{stats.activeUsers}</p>
+              </CardContent>
+            </Card>
+            <Card className="rounded-3xl border border-slate-100 shadow-sm bg-white p-6">
+              <CardContent className="p-0">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Blocked Users</span>
+                <p className="text-2xl font-extrabold text-rose-655 mt-1">{stats.blockedUsers}</p>
+              </CardContent>
+            </Card>
+            <Card className="rounded-3xl border border-slate-100 shadow-sm bg-white p-6">
+              <CardContent className="p-0">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Google Users</span>
+                <p className="text-2xl font-extrabold text-blue-600 mt-1">{stats.googleUsers}</p>
+              </CardContent>
+            </Card>
           </div>
 
-          <Card><CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search by name, email, or phone..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 rounded border dark:border-gray-600 dark:bg-gray-700"
-                />
+          <Card className="rounded-3xl border border-slate-100 bg-white shadow-sm overflow-hidden">
+            <CardContent className="p-5">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex-1 relative w-full">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Search by name, email, or phone..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-9 pr-4 h-11 rounded-2xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all outline-none text-slate-700"
+                  />
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={handleFilter}
+                  className="rounded-xl border-slate-200 hover:bg-slate-50 font-semibold cursor-pointer h-11 text-slate-700 w-full sm:w-auto shrink-0"
+                >
+                  <Filter className="h-4 w-4 mr-2 text-blue-600" /> Filters
+                </Button>
               </div>
-              <Button variant="outline" onClick={handleFilter}><Filter className="h-4 w-4 mr-2" /> Filters</Button>
-            </div>
-          </CardContent></Card>
+            </CardContent>
+          </Card>
 
-          <DataTable
-            columns={columns}
-            data={filteredAndSortedData}
-            loading={loading}
-            sortBy={sortBy}
-            sortOrder={sortOrder}
-            onSort={handleSort}
-          />
+          <div className="rounded-3xl border border-slate-100 bg-white shadow-sm overflow-hidden">
+            <DataTable
+              columns={columns}
+              data={filteredAndSortedData}
+              loading={loading}
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+              onSort={handleSort}
+            />
+          </div>
 
-          <Pagination
-            current={currentPage}
-            total={totalUsers}
-            pageSize={pageSize}
-            onChange={handlePageChange}
-            showSizeChanger
-            showQuickJumper
-            showTotal={(total, range) => (
-              <span>Showing {range[0]} to {range[1]} of {total} users</span>
-            )}
-          />
+          <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+            <Pagination
+              current={currentPage}
+              total={totalUsers}
+              pageSize={pageSize}
+              onChange={handlePageChange}
+              showSizeChanger
+              showQuickJumper
+              showTotal={(total, range) => (
+                <span className="text-xs font-semibold text-slate-500">
+                  Showing {range[0]} to {range[1]} of {total} users
+                </span>
+              )}
+            />
+          </div>
         </div>
       </main>
-      <div className="ml-64">
+      <div className="lg:ml-64 p-6">
         <Footer />
       </div>
     </div>

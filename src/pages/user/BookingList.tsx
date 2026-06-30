@@ -12,6 +12,7 @@ import { userService } from "@/api/UserService"
 import { ErrorToast } from "@/components/shared/Toaster"
 import Header from "@/components/user/shared/Header"
 import { formatDate } from "@/utils/timeUtils"
+import { cn } from "@/lib/utils"
 
 interface Booking {
   id: string
@@ -83,127 +84,138 @@ export default function UserBookingsPage() {
     navigate(`/bookings/${bookingId}`)
   }
 
-  return (<>
-    <Header/>
-    <div className="min-h-screen bg-background p-4  md:p-8 mt-14">
-      <div className="mx-auto max-w-6xl space-y-6">
-        
-        {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold">My Bookings</h1>
-          <p className="text-muted-foreground">View and manage all your service bookings</p>
-        </div>
+  return (
+    <>
+      <Header />
+      <div className="min-h-screen bg-slate-50/50 pt-28 pb-20 px-4 md:px-8">
+        <div className="mx-auto max-w-6xl space-y-6">
+          {/* Header */}
+          <div className="space-y-1">
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">My Bookings</h1>
+            <p className="text-slate-500 text-sm">View and manage all your service bookings</p>
+          </div>
 
-        <Card className="bg-white">
-          <CardHeader>
-            <CardTitle>Bookings</CardTitle>
-          </CardHeader>
+          <Card className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+            <CardHeader className="border-b border-slate-50 pb-4">
+              <CardTitle className="text-lg font-bold text-slate-800">Booking History</CardTitle>
+            </CardHeader>
 
-          <CardContent>
-            
-            {/* 🔍 Search Bar */}
-            <div className="flex items-center gap-2 mb-4">
-              <div className="relative w-full max-w-sm">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search by service, worker, date..."
-                  className="pl-8"
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value)
-                    setPage(1) // Reset to page 1 for new search
-                  }}
-                />
+            <CardContent className="pt-6">
+              {/* 🔍 Search Bar */}
+              <div className="flex items-center gap-2 mb-6">
+                <div className="relative w-full max-w-sm">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <Input
+                    placeholder="Search by service, worker, date..."
+                    className="pl-9 h-11 rounded-2xl border-slate-200 bg-slate-50/50 focus:bg-white focus:border-blue-500 focus:ring-blue-500 text-sm transition-all duration-350"
+                    value={search}
+                    onChange={(e) => {
+                      setSearch(e.target.value)
+                      setPage(1) // Reset to page 1 for new search
+                    }}
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Service</TableHead>
-                    <TableHead>Worker</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Time</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-
-                <TableBody>
-                  {bookings.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
-                        No bookings found.
-                      </TableCell>
+              {/* Table */}
+              <div className="overflow-x-auto rounded-2xl border border-slate-100">
+                <Table>
+                  <TableHeader className="bg-slate-50/50">
+                    <TableRow className="hover:bg-transparent border-slate-100">
+                      <TableHead className="font-bold text-slate-700">Service</TableHead>
+                      <TableHead className="font-bold text-slate-700">Worker</TableHead>
+                      <TableHead className="font-bold text-slate-700">Date</TableHead>
+                      <TableHead className="font-bold text-slate-700">Time</TableHead>
+                      <TableHead className="font-bold text-slate-700">Status</TableHead>
+                      <TableHead className="text-right font-bold text-slate-700">Action</TableHead>
                     </TableRow>
-                  ) : (
-                    bookings.map((booking) => (
-                      <TableRow
-                        key={booking.id}
-                        className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => handleRowClick(booking.id)}
-                      >
-                        <TableCell className="font-medium">{booking.serviceName}</TableCell>
-                        <TableCell>{booking.workerName}</TableCell>
-                        <TableCell>{formatDate( booking.date)}</TableCell>
-                        <TableCell>{booking.time}</TableCell>
+                  </TableHeader>
 
-                        <TableCell>
-                          <Badge variant={getStatusBadgeVariant(booking.status)}>
-                            {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                          </Badge>
-                        </TableCell>
-
-                        <TableCell className="text-right">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              handleRowClick(booking.id)
-                            }}
-                          >
-                            <Eye className="h-4 w-4" /> View
-                          </Button>
+                  <TableBody>
+                    {bookings.length === 0 ? (
+                      <TableRow className="border-0">
+                        <TableCell colSpan={6} className="text-center py-10 text-slate-400 italic">
+                          No bookings found.
                         </TableCell>
                       </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+                    ) : (
+                      bookings.map((booking) => (
+                        <TableRow
+                          key={booking.id}
+                          className="cursor-pointer hover:bg-slate-50/50 border-slate-100 transition-colors"
+                          onClick={() => handleRowClick(booking.id)}
+                        >
+                          <TableCell className="font-bold text-slate-800">{booking.serviceName}</TableCell>
+                          <TableCell className="text-slate-600 font-medium">{booking.workerName}</TableCell>
+                          <TableCell className="text-slate-500 font-medium">{formatDate(booking.date)}</TableCell>
+                          <TableCell className="text-slate-500 font-medium">{booking.time}</TableCell>
 
-            {/* Pagination */}
-            <div className="mt-6 flex items-center justify-between border-t pt-4">
-              <p className="text-sm text-muted-foreground">
-                Page <b>{page}</b> of <b>{totalPages}</b> ({total} total bookings)
-              </p>
+                          <TableCell>
+                            <Badge
+                              variant="outline"
+                              className={cn(
+                                "rounded-full font-bold text-xs px-2.5 py-0.5",
+                                booking.status === "confirmed"
+                                  ? "bg-blue-50 text-blue-700 border-blue-200"
+                                  : booking.status === "completed"
+                                  ? "bg-green-50 text-green-700 border-green-200"
+                                  : booking.status === "pending"
+                                  ? "bg-amber-50 text-amber-700 border-amber-200"
+                                  : "bg-rose-50 text-rose-700 border-rose-200"
+                              )}
+                            >
+                              {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                            </Badge>
+                          </TableCell>
 
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  disabled={page === 1}
-                  onClick={() => setPage((p) => p - 1)}
-                >
-                  <ChevronLeft /> Previous
-                </Button>
-
-                <Button
-                  variant="outline"
-                  disabled={page === totalPages}
-                  onClick={() => setPage((p) => p + 1)}
-                >
-                  Next <ChevronRight />
-                </Button>
+                          <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-xl font-semibold cursor-pointer transition"
+                              onClick={() => handleRowClick(booking.id)}
+                            >
+                              <Eye className="h-4 w-4 mr-1" /> View
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
               </div>
-            </div>
 
-          </CardContent>
-        </Card>
+              {/* Pagination */}
+              <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100 pt-5">
+                <p className="text-xs text-slate-500 font-medium">
+                  Page <b>{page}</b> of <b>{totalPages}</b> ({total} total bookings)
+                </p>
+
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    className="rounded-xl cursor-pointer hover:bg-slate-50 font-semibold h-9 text-xs"
+                    disabled={page === 1}
+                    onClick={() => setPage((p) => p - 1)}
+                  >
+                    <ChevronLeft className="h-4 w-4 mr-1" /> Previous
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="rounded-xl cursor-pointer hover:bg-slate-50 font-semibold h-9 text-xs"
+                    disabled={page === totalPages}
+                    onClick={() => setPage((p) => p + 1)}
+                  >
+                    Next <ChevronRight className="h-4 w-4 ml-1" />
+                  </Button>
+                </div>
+              </div>
+
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </div>
     </>
-  )
+  );
 }

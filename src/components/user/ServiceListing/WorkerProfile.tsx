@@ -110,7 +110,7 @@ export function WorkerProfile({
                 </div>
 
                 <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-md">
-                  {(worker.distance / 1000).toFixed(1)} km away
+                  {(worker.distance / 1000)} km away
                 </span>
               </div>
             </div>
@@ -359,7 +359,7 @@ export function WorkerProfile({
                 <MapPin className="h-4 w-4 text-indigo-300" />
                 <span>{worker.zone}</span>
                 <span className="text-indigo-300 text-xs bg-white/10 px-1.5 py-0.5 rounded">
-                  {(worker.distance / 1000).toFixed(1)} km away
+                  {(worker.distance / 1000)} km away
                 </span>
               </div>
             </div>

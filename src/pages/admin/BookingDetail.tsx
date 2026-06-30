@@ -291,19 +291,19 @@ export default function AdminBookingDetailsPage() {
                 <CardContent className="space-y-3">
                   <div className="flex justify-between">
                     <span className="opacity-70">Advance</span>
-                    <span>${booking.payment.advanceAmount.toFixed(2)}</span>
+                    <span>₹{booking.payment.advanceAmount.toFixed(2)}</span>
                   </div>
 
                   <div className="flex justify-between">
                     <span className="opacity-70">Remaining</span>
-                    <span>${booking.payment.remainingAmount.toFixed(2)}</span>
+                    <span>₹{booking.payment.remainingAmount.toFixed(2)}</span>
                   </div>
 
                   <Separator className="bg-white/20" />
 
                   <div className="flex justify-between text-xl font-bold">
                     <span>Total</span>
-                    <span>${booking.payment.totalAmount.toFixed(2)}</span>
+                    <span>₹{booking.payment.totalAmount.toFixed(2)}</span>
                   </div>
                 </CardContent>
               </Card>

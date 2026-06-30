@@ -279,6 +279,7 @@ export default function WorkerBookingDetailsPage() {
   };
 
   const calculateDuration = () => {
+    if(!booking.endTime) return "0"
     const start = new Date(`${booking.date.split("T")[0]}T${booking.startTime}`);
     const end = new Date(`${booking.date.split("T")[0]}T${booking.endTime}`);
     const diffMs = end.getTime() - start.getTime();
@@ -492,7 +493,7 @@ export default function WorkerBookingDetailsPage() {
                 <div>
                   <p className="text-[11px] text-slate-400 uppercase font-medium tracking-wide">Time</p>
                   <p className="text-sm font-medium text-slate-800">
-                    {booking.startTime} – {booking.endTime}{" "}
+                    {booking.startTime} – {booking.endTime??"not calculated"}{" "}
                     <span className="text-slate-400 text-xs">({calculateDuration()})</span>
                   </p>
                 </div>
@@ -626,7 +627,7 @@ export default function WorkerBookingDetailsPage() {
                 <p className="text-sm text-slate-400 text-center py-6">No additional items added yet</p>
               )}
 
-              {isEditable && (
+              {/* {isEditable && (
                 <div className="space-y-3 pt-3 border-t border-slate-100">
                   <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Add Item</p>
                   <div className="grid sm:grid-cols-3 gap-2.5">
@@ -659,7 +660,7 @@ export default function WorkerBookingDetailsPage() {
                     Add Item
                   </Button>
                 </div>
-              )}
+              )} */}
             </SectionCard>
           )}
 

@@ -66,14 +66,14 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) 
   };
 
   return (
-    <div className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 shadow-sm z-40">
+    <div className="fixed left-0 top-0 h-full w-64 bg-white border-r border-slate-100 shadow-sm z-45 hidden lg:block">
       {/* Logo Section */}
-      <div className="flex items-center px-6 py-4 border-b border-gray-200">
+      <div className="flex items-center px-6 py-4 border-b border-slate-100">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-md">
             <span className="text-white font-bold text-sm">⚙️</span>
           </div>
-          <span className="text-xl font-bold text-black">Admin Panel</span>
+          <span className="text-xl font-bold text-slate-800">Admin Panel</span>
         </div>
       </div>
 
@@ -88,13 +88,13 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) 
               <li key={item.id}>
                 <button
                   onClick={() => handleItemClick(item.id, item.path)}
-                  className={`w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                  className={`w-full flex items-center px-4 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 cursor-pointer ${
                     isActive
-                      ? "bg-gray-100 text-black border-r-2 border-black"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-black"
+                      ? "bg-blue-50 text-blue-600"
+                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
                   }`}
                 >
-                  <Icon className={`w-5 h-5 mr-3 ${isActive ? "text-black" : "text-gray-400"}`} />
+                  <Icon className={`w-5 h-5 mr-3 ${isActive ? "text-blue-600" : "text-slate-400"}`} />
                   {item.label}
                 </button>
               </li>
@@ -106,9 +106,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) 
         <div className="absolute bottom-6 left-3 right-3">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors duration-200"
+            className="w-full flex items-center px-4 py-2.5 text-sm font-semibold text-slate-500 hover:bg-red-50 hover:text-red-650 rounded-xl transition-colors duration-200 cursor-pointer"
           >
-            <LogOut className="w-5 h-5 mr-3" />
+            <LogOut className="w-5 h-5 mr-3 text-red-550" />
             Logout
           </button>
         </div>

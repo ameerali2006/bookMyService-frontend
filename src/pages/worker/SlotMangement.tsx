@@ -761,52 +761,46 @@ const WorkManagementPage: React.FC = () => {
     <WorkerLayout>
       <Navbar />
 
-      <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
-        <div className="max-w-4xl mx-auto">
+      <div className="min-h-screen bg-slate-50/50 pt-24 pb-20 px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Calendar className="text-white" size={20} />
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200">
+                  <Calendar className="text-white" size={22} />
+                </div>
+                <div>
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                    Work Schedule Management
+                  </h1>
+                  <p className="text-slate-500 text-sm mt-0.5">
+                    Configure your weekly working hours with custom breaks and shift patterns.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                  Work Schedule Management
-                </h1>
-
-                <p className="text-gray-600 text-sm sm:text-base">
-                  Configure your weekly working hours with custom breaks and
-                  shift patterns
-                </p>
-              </div>
+              <Button
+                variant="outline"
+                onClick={() => setCalendarModalOpen(true)}
+                className="flex items-center gap-2 rounded-xl border-slate-200 hover:bg-slate-50 h-10 text-slate-700 font-semibold cursor-pointer shrink-0"
+              >
+                <Calendar className="h-4.5 w-4.5 text-blue-600" />
+                Manage Calendar
+              </Button>
             </div>
-            <Button
-              variant="outline"
-              onClick={() => setCalendarModalOpen(true)}
-              className="flex items-center gap-2"
-            >
-              <Calendar className="h-5 w-5" />
-              Manage Calendar
-            </Button>
 
             {/* Summary Stats */}
-            <div className="flex flex-wrap gap-4 mt-4">
-              <div className="bg-white rounded-lg px-4 py-2 border border-gray-200">
-                <span className="text-sm text-gray-600">Active Days: </span>
-                <span className="font-semibold text-blue-600">
-                  {activeDaysCount}/7
+            <div className="flex flex-wrap gap-4 mt-6">
+              <div className="bg-white rounded-2xl px-4 py-2.5 border border-slate-100 shadow-sm text-xs font-bold text-slate-500">
+                Active Days: <span className="text-sm font-extrabold text-blue-600 ml-1">{activeDaysCount}/7</span>
+              </div>
+              <div className="bg-white rounded-2xl px-4 py-2.5 border border-slate-100 shadow-sm text-xs font-bold text-slate-500">
+                Weekly Hours: <span className="text-sm font-extrabold text-green-600 ml-1">
+                  {Math.floor(totalWeeklyHours)}h {Math.round((totalWeeklyHours % 1) * 60)}m
                 </span>
               </div>
-              <div className="bg-white rounded-lg px-4 py-2 border border-gray-200">
-                <span className="text-sm text-gray-600">Weekly Hours: </span>
-                <span className="font-semibold text-green-600">
-                  {Math.floor(totalWeeklyHours)}h{" "}
-                  {Math.round((totalWeeklyHours % 1) * 60)}m
-                </span>
-              </div>
-              <div className="bg-white rounded-lg px-4 py-2 border border-gray-200">
-                <span className="text-sm text-gray-600">Total Breaks: </span>
-                <span className="font-semibold text-orange-600">
+              <div className="bg-white rounded-2xl px-4 py-2.5 border border-slate-100 shadow-sm text-xs font-bold text-slate-500">
+                Total Breaks: <span className="text-sm font-extrabold text-orange-600 ml-1">
                   {schedule
                     .filter((d) => d.enabled)
                     .reduce((sum, d) => sum + d.breaks.length, 0)}
@@ -816,24 +810,26 @@ const WorkManagementPage: React.FC = () => {
           </div>
 
           {/* Bulk Actions */}
-          <Card className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-            <CardContent className="p-4">
+          <Card className="mb-8 bg-blue-50/20 border border-blue-100 rounded-3xl shadow-sm overflow-hidden">
+            <CardContent className="p-5">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <Settings className="text-blue-600" size={20} />
+                  <div className="p-2.5 rounded-2xl bg-blue-50 text-blue-600">
+                    <Settings size={20} />
+                  </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-bold text-slate-800 text-sm">
                       Quick Actions
                     </h3>
-                    <p className="text-sm text-gray-600">
-                      Apply schedule and breaks to all active days
+                    <p className="text-xs text-slate-500 font-medium">
+                      Apply schedule and breaks to all active days.
                     </p>
                   </div>
                 </div>
                 <Button
                   onClick={copyFirstDayToAll}
                   disabled={activeDaysCount < 2}
-                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
+                  className="flex items-center gap-2 rounded-xl h-10 bg-blue-600 hover:bg-blue-750 text-white font-semibold transition cursor-pointer shadow-md shadow-blue-100"
                 >
                   <Copy size={16} />
                   Copy First Active Day to All
@@ -843,28 +839,28 @@ const WorkManagementPage: React.FC = () => {
           </Card>
 
           {/* Days Schedule */}
-          <div className="space-y-4 mb-8">
+          <div className="space-y-6 mb-8">
             {schedule.map((day, index) => (
               <DayCard key={day.id} day={day} index={index} />
             ))}
           </div>
 
           {/* Save Button */}
-          <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+          <Card className="bg-emerald-50/20 border border-emerald-100 rounded-3xl shadow-sm overflow-hidden">
             <CardContent className="p-6">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="text-center sm:text-left">
-                  <h3 className="font-semibold text-gray-900 mb-1">
+                  <h3 className="font-bold text-slate-800 mb-1">
                     Ready to save your schedule?
                   </h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-xs text-slate-500 font-medium">
                     Your changes will be applied immediately after saving.
                   </p>
                 </div>
                 <Button
                   onClick={saveSchedule}
                   size="lg"
-                  className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8"
+                  className="bg-green-600 hover:bg-green-700 text-white font-bold px-8 rounded-xl h-11 transition cursor-pointer shadow-md shadow-green-100"
                 >
                   <Save className="mr-2" size={16} />
                   Save Schedule

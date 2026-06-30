@@ -191,75 +191,115 @@ const fetchWorkers = async (page = 1, limit = 10, sortBy = "", sortOrder: "asc" 
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50 pt-16">
       <Sidebar activeItem="WorkerManagement" onItemClick={() => {}} onLogout={() => {
         localStorage.removeItem("adminToken")
         sessionStorage.clear()
         navigate("/admin/login")
       }} />
       <Navbar userName="Admin" onSearch={setSearchTerm} />
-      <main className="ml-64 pt-16 p-6">
+      <main className="lg:ml-64 pt-24 p-4 sm:p-6 lg:p-8">
         <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-gray-900">Worker Management</h1>
-            <Button variant="outline" onClick={() =>console.log("expoort")}>
-              <Download className="w-4 h-4 mr-2" /> Export
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Card><CardContent className="p-4">Total: {workers.length}</CardContent></Card>
-            <Card><CardContent className="p-4">Active: {workers.filter(w => w.isBlocked).length}</CardContent></Card>
-            <Card><CardContent className="p-4">Blocked: {workers.filter(w => !w.isBlocked).length}</CardContent></Card>
-            <Card><CardContent className="p-4">Verified: {workers.filter(w => w.isVerified).length}</CardContent></Card>
-          </div>
-
-          <Card><CardContent className="p-4 flex items-center gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
-                placeholder="Search worker..."
-                className="w-full pl-10 pr-4 py-2 border rounded"
-              />
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Worker Management</h1>
+              <p className="text-slate-500 text-sm mt-0.5">Manage and verify worker details and accounts</p>
             </div>
-            <Button variant="outline" onClick={() => console.log("Filter clicked")}>
-              <Filter className="w-4 h-4 mr-2" /> Filter
-            </Button>
-          </CardContent></Card>
+            {/* <Button
+              variant="outline"
+              onClick={() => console.log("export")}
+              className="rounded-xl border-slate-200 hover:bg-slate-50 font-semibold cursor-pointer h-10 text-slate-700 w-full sm:w-auto"
+            >
+              <Download className="w-4 h-4 mr-2 text-blue-600" /> Export
+            </Button> */}
+          </div>
 
-          <DataTable
-            columns={columns}
-            data={filteredAndSorted}
-            loading={loading}
-            sortBy={sortBy}
-            sortOrder={sortOrder}
-            onSort={(key, order) => {
-              setSortBy(key)
-              setSortOrder(order)
-            }}
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="rounded-3xl border border-slate-100 shadow-sm bg-white p-6">
+              <CardContent className="p-0">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total</span>
+                <p className="text-2xl font-extrabold text-slate-800 mt-1">{workers.length}</p>
+              </CardContent>
+            </Card>
+            <Card className="rounded-3xl border border-slate-100 shadow-sm bg-white p-6">
+              <CardContent className="p-0">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Active</span>
+                <p className="text-2xl font-extrabold text-green-600 mt-1">{workers.filter(w => !w.isBlocked).length}</p>
+              </CardContent>
+            </Card>
+            <Card className="rounded-3xl border border-slate-100 shadow-sm bg-white p-6">
+              <CardContent className="p-0">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Blocked</span>
+                <p className="text-2xl font-extrabold text-rose-655 mt-1">{workers.filter(w => w.isBlocked).length}</p>
+              </CardContent>
+            </Card>
+            <Card className="rounded-3xl border border-slate-100 shadow-sm bg-white p-6">
+              <CardContent className="p-0">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Verified</span>
+                <p className="text-2xl font-extrabold text-blue-600 mt-1">{workers.filter(w => w.isVerified).length}</p>
+              </CardContent>
+            </Card>
+          </div>
 
+          <Card className="rounded-3xl border border-slate-100 bg-white shadow-sm overflow-hidden">
+            <CardContent className="p-5">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex-1 relative w-full">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                    placeholder="Search worker..."
+                    className="w-full pl-9 pr-4 h-11 rounded-2xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all outline-none text-slate-700"
+                  />
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={() => console.log("Filter clicked")}
+                  className="rounded-xl border-slate-200 hover:bg-slate-50 font-semibold cursor-pointer h-11 text-slate-700 w-full sm:w-auto shrink-0"
+                >
+                  <Filter className="w-4 h-4 mr-2 text-blue-600" /> Filter
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
-          <Pagination
-            current={currentPage}
-            total={total}
-            pageSize={pageSize}
-            onChange={(page, newSize) => {
-              setCurrentPage(page)
-              if (newSize) setPageSize(newSize)
-            }}
-            showSizeChanger
-            showQuickJumper
-            showTotal={(t, range) => (
-              <span>Showing {range[0]} to {range[1]} of {t} workers</span>
-            )}
-          />
+          <div className="rounded-3xl border border-slate-100 bg-white shadow-sm overflow-hidden">
+            <DataTable
+              columns={columns}
+              data={filteredAndSorted}
+              loading={loading}
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+              onSort={(key, order) => {
+                setSortBy(key)
+                setSortOrder(order)
+              }}
+            />
+          </div>
+
+          <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+            <Pagination
+              current={currentPage}
+              total={total}
+              pageSize={pageSize}
+              onChange={(page, newSize) => {
+                setCurrentPage(page)
+                if (newSize) setPageSize(newSize)
+              }}
+              showSizeChanger
+              showQuickJumper
+              showTotal={(t, range) => (
+                <span className="text-xs font-semibold text-slate-500">
+                  Showing {range[0]} to {range[1]} of {t} workers
+                </span>
+              )}
+            />
+          </div>
         </div>
       </main>
-      <div className="ml-64">
+      <div className="lg:ml-64 p-6">
         <Footer />
       </div>
     </div>

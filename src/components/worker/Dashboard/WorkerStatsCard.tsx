@@ -26,16 +26,16 @@ export const WorkerStatsCard: React.FC<WorkerStatsCardProps> = ({
     );
 
   return (
-    <Card className="bg-white border-0 shadow-md">
-      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
+    <Card className="bg-white border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 rounded-3xl">
+      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 p-6">
+        <CardTitle className="text-sm font-bold text-slate-500">
           {title}
         </CardTitle>
-        <div className="p-2 rounded-full bg-gray-100">{icon}</div>
+        <div className="p-2.5 rounded-2xl bg-blue-50 text-blue-600">{icon}</div>
       </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold text-foreground">{value}</div>
-        <div className="flex items-center text-xs text-muted-foreground mt-1">
+      <CardContent className="px-6 pb-6 pt-0">
+        <div className="text-3xl font-extrabold text-slate-900">{value}</div>
+        <div className="flex items-center text-xs text-slate-400 mt-2 font-semibold">
           {trendIcon}
           <span className="ml-1">{change}</span>
         </div>

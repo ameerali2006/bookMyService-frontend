@@ -143,10 +143,10 @@ export default function BasicBookingDetails() {
   return (
     <>
       <Header />
-      <main className={cn("min-h-dvh w-full bg-background text-foreground")}>
-        <div className="mx-auto w-full max-w-5xl px-6 py-10 pt-20 pb-36">
+      <main className={cn("min-h-dvh w-full bg-slate-50 text-foreground pt-20")}>
+        <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 py-10 pb-36">
           {loading ? (
-            <p className="text-center text-gray-500">Loading availability...</p>
+            <p className="text-center text-slate-500 py-12">Loading availability...</p>
           ) : (
             <ChooseDateTime
               availableTimes={availableTimes}
@@ -156,33 +156,35 @@ export default function BasicBookingDetails() {
             />
           )}
 
-          <div className="mt-8 rounded-lg border border-border bg-card p-6 shadow-sm">
-            <Label htmlFor="details" className="block text-base font-medium">
+          <div className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 md:p-8 shadow-sm">
+            <Label htmlFor="details" className="block text-base font-bold text-slate-800">
               Additional details
             </Label>
             <textarea
               id="details"
-              placeholder="Enter details here"
-              className="mt-2 w-full min-h-40 resize-none rounded-xl bg-white p-3"
+              placeholder="Please provide any additional details, special instructions, or service requirements..."
+              className="mt-4 w-full min-h-40 resize-none rounded-2xl border border-slate-200 bg-slate-50/50 p-4 text-sm focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all duration-300"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
         </div>
 
-        <div className="fixed bottom-0 left-0 w-full bg-white py-3 shadow-md">
-          <button
-            disabled={isProceedDisabled}
-            onClick={handleProceed}
-            className={cn(
-              "mx-auto block w-[800px] rounded-2xl px-8 py-4 text-xl font-semibold shadow-lg transition",
-              isProceedDisabled
-                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                : "bg-yellow-400 text-blue-900 hover:bg-yellow-500",
-            )}
-          >
-            Proceed
-          </button>
+        <div className="fixed bottom-0 left-0 w-full bg-white border-t border-slate-100 py-4 px-4 sm:px-6 lg:px-8 shadow-[0_-8px_24px_rgba(0,0,0,0.04)] z-40">
+          <div className="max-w-5xl mx-auto">
+            <button
+              disabled={isProceedDisabled}
+              onClick={handleProceed}
+              className={cn(
+                "w-full rounded-2xl py-4 text-base font-bold shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer",
+                isProceedDisabled
+                  ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                  : "bg-yellow-400 text-slate-900 hover:bg-yellow-350 hover:scale-[1.01] active:scale-[0.99]",
+              )}
+            >
+              Proceed
+            </button>
+          </div>
         </div>
       </main>
     </>

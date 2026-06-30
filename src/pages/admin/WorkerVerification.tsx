@@ -164,7 +164,7 @@ export default function WorkerManagement() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50 pt-14">
       <Sidebar
         activeItem="WorkerManagement"
         onItemClick={() => {}}
@@ -175,100 +175,117 @@ export default function WorkerManagement() {
         }}
       />
       <Navbar userName="Admin" onSearch={setSearchTerm} />
-      <main className="ml-64 pt-16 p-6">
-        <h1 className="text-xl font-bold mb-4">Worker Verification</h1>
+      <main className="lg:ml-64 pt-24 p-4 sm:p-6 lg:p-8">
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Worker Verification</h1>
+            <p className="text-slate-500 text-sm mt-0.5">Verify and review registration documents of new service workers</p>
+          </div>
 
-        {/* Reusable Table */}
-        <DataTable
-          columns={columns}
-          data={workers.slice(
-            (currentPage - 1) * pageSize,
-            currentPage * pageSize
-          )}
-          loading={loading}
-        />
+          <div className="rounded-3xl border border-slate-100 bg-white shadow-sm overflow-hidden">
+            <DataTable
+              columns={columns}
+              data={workers.slice(
+                (currentPage - 1) * pageSize,
+                currentPage * pageSize
+              )}
+              loading={loading}
+            />
+          </div>
 
-        {/* Pagination */}
-        <div className="mt-4 flex justify-end">
-          <Pagination
-            current={currentPage}
-            total={total}
-            pageSize={pageSize}
-            onChange={(page, newSize) => {
-              setCurrentPage(page);
-              if (newSize) setPageSize(newSize);
-            }}
-            showSizeChanger
-            showQuickJumper
-            showTotal={(t, range) => (
-              <span>
-                Showing {range[0]} to {range[1]} of {t} workers
-              </span>
-            )}
-          />
-        </div>
+          <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+            <Pagination
+              current={currentPage}
+              total={total}
+              pageSize={pageSize}
+              onChange={(page, newSize) => {
+                setCurrentPage(page);
+                if (newSize) setPageSize(newSize);
+              }}
+              showSizeChanger
+              showQuickJumper
+              showTotal={(t, range) => (
+                <span className="text-xs font-semibold text-slate-500">
+                  Showing {range[0]} to {range[1]} of {t} workers
+                </span>
+              )}
+            />
+          </div>
 
-        {/* Details Modal */}
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Worker Details</DialogTitle>
-            </DialogHeader>
+          {/* Details Modal */}
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent className="max-w-2xl rounded-3xl p-6 bg-white">
+              <DialogHeader>
+                <DialogTitle className="text-lg font-bold text-slate-800">Worker Verification Details</DialogTitle>
+              </DialogHeader>
 
-            {selectedWorker && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <p>
-                    <span className="font-semibold">Name:</span>{" "}
-                    {selectedWorker.name}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Email:</span>{" "}
-                    {selectedWorker.email}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Phone:</span>{" "}
-                    {selectedWorker.phone}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Category:</span>{" "}
-                    {selectedWorker.category.category}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Experience:</span>{" "}
-                    {selectedWorker.experience}
-                  </p>
-                  <p>
-                    <span className="font-semibold">Status:</span>{" "}
-                    {selectedWorker.isVerified}
-                  </p>
-                </div>
+              {selectedWorker && (
+                <div className="space-y-6 mt-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                    <p className="text-slate-600">
+                      <span className="font-bold text-slate-800 mr-1.5">Name:</span>
+                      {selectedWorker.name}
+                    </p>
+                    <p className="text-slate-600">
+                      <span className="font-bold text-slate-800 mr-1.5">Email:</span>
+                      {selectedWorker.email}
+                    </p>
+                    <p className="text-slate-600">
+                      <span className="font-bold text-slate-800 mr-1.5">Phone:</span>
+                      {selectedWorker.phone}
+                    </p>
+                    <p className="text-slate-600">
+                      <span className="font-bold text-slate-800 mr-1.5">Category:</span>
+                      {selectedWorker.category.category}
+                    </p>
+                    <p className="text-slate-600">
+                      <span className="font-bold text-slate-800 mr-1.5">Experience:</span>
+                      {selectedWorker.experience} years
+                    </p>
+                    <p className="text-slate-600">
+                      <span className="font-bold text-slate-800 mr-1.5">Status:</span>
+                      <span className="inline-block px-2.5 py-0.5 rounded-full font-bold text-xs bg-amber-50 text-amber-700 border border-amber-100">
+                        {selectedWorker.isVerified}
+                      </span>
+                    </p>
+                  </div>
 
-                <div>
-                  <h3 className="font-semibold mb-2">Documents</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    {selectedWorker.documents && (
-                      <img
-                        src={selectedWorker.documents}
-                        alt={`document-${selectedWorker._id}`}
-                        className="rounded-lg border shadow-sm"
-                      />
-                    )}
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-800 mb-3">Verification Documents</h3>
+                    <div className="max-w-md">
+                      {selectedWorker.documents ? (
+                        <img
+                          src={selectedWorker.documents}
+                          alt={`document-${selectedWorker._id}`}
+                          className="rounded-2xl border border-slate-200 shadow-sm w-full object-cover max-h-64"
+                        />
+                      ) : (
+                        <p className="text-sm text-slate-400 italic">No document image uploaded.</p>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            <DialogFooter>
-              <Button variant="destructive" onClick={handleReject}>
-                Reject
-              </Button>
-              <Button variant="default" onClick={handleApprove}>
-                Approve
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+              <DialogFooter className="mt-6 flex gap-3">
+                <Button
+                  variant="destructive"
+                  onClick={handleReject}
+                  className="rounded-xl font-bold cursor-pointer h-10 px-5"
+                >
+                  Reject Verification
+                </Button>
+                <Button
+                  variant="default"
+                  onClick={handleApprove}
+                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold cursor-pointer h-10 px-5 shadow-md shadow-blue-100"
+                >
+                  Approve Verification
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </main>
     </div>
   );

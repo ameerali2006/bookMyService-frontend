@@ -84,7 +84,7 @@ const Header = () => {
 };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-blue-900 px-4 py-3 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-blue-950/90 backdrop-blur-md px-4 sm:px-6 lg:px-8 py-3.5 border-b border-white/5 shadow-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
@@ -166,19 +166,19 @@ const Header = () => {
                 {/* Profile */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button className="h-9 w-9 rounded-full bg-yellow-400 text-black hover:bg-yellow-300 flex items-center justify-center">
+                    <Button className="h-9 w-9 rounded-full bg-yellow-400 text-black hover:bg-yellow-300 flex items-center justify-center cursor-pointer transition">
                       <User className="h-5 w-5" />
                     </Button>
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent
                     align="end"
-                    className="mt-2 w-36 bg-white rounded shadow-md z-50"
+                    className="mt-3 w-40 bg-white rounded-2xl border border-gray-100 shadow-xl p-1.5 z-50"
                   >
                     <DropdownMenuItem asChild>
                       <Link
                         to="/profile"
-                        className="w-full px-4 py-2 text-sm hover:bg-gray-100"
+                        className="w-full px-3 py-2 text-sm text-gray-700 hover:text-blue-600 rounded-xl hover:bg-blue-50/50 transition cursor-pointer"
                       >
                         Profile
                       </Link>
@@ -186,7 +186,7 @@ const Header = () => {
 
                     <DropdownMenuItem
                       onClick={handleLogout}
-                      className="px-4 py-2 text-sm hover:bg-gray-100"
+                      className="w-full px-3 py-2 text-sm text-red-600 hover:text-red-700 rounded-xl hover:bg-red-50/50 transition cursor-pointer"
                     >
                       Logout
                     </DropdownMenuItem>
@@ -199,7 +199,7 @@ const Header = () => {
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="bg-white text-blue-900 hover:bg-gray-100"
+                    className="bg-white/10 text-white hover:bg-white/20 border border-white/20 transition cursor-pointer"
                   >
                     Login
                   </Button>
@@ -208,21 +208,11 @@ const Header = () => {
                 <Link to="/register">
                   <Button
                     size="sm"
-                    className="bg-yellow-400 text-black hover:bg-yellow-300"
+                    className="bg-yellow-400 text-black hover:bg-yellow-350 shadow-md shadow-yellow-400/10 hover:shadow-yellow-400/20 transition cursor-pointer font-semibold"
                   >
                     Sign Up
                   </Button>
                 </Link>
-
-                {/* Mobile Menu */}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="md:hidden text-white"
-                  onClick={toggleMobileMenu}
-                >
-                  <Menu className="h-6 w-6" />
-                </Button>
               </div>
             )}
           </div>
@@ -231,7 +221,7 @@ const Header = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden flex items-center justify-center w-8 h-8 text-white"
+            className="md:hidden flex items-center justify-center w-9 h-9 text-white hover:bg-white/10 rounded-xl transition cursor-pointer"
             onClick={toggleMobileMenu}
           >
             <Menu className="h-6 w-6" />

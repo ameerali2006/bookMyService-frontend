@@ -90,7 +90,7 @@ const PaymentSuccessPage: React.FC = () => {
         };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-background to-muted p-3">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-background to-muted p-20">
       <Card className="w-full max-w-md shadow-xl rounded-2xl border animate-in fade-in zoom-in duration-500">
         <CardContent className="p-6 text-center space-y-6">
           
