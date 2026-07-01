@@ -12,7 +12,6 @@ export const WORKER_ROUTES = {
   SERVICE_APPROVED_DETAILPAGE:"/appointments/approved/:bookingId",
   All_BOOKINGS:"/appointments/allBookings",
   WALLET:"/profile/wallet",
-  CHAT:"/messages"
-
-
+  CHAT:"/messages",
+  REVENUE: "/revenue"
 };

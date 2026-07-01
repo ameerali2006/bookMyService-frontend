@@ -32,6 +32,9 @@ export const API_ROUTES = {
     AVAILABILITY: (workerId: string) => `/workers/availability?workerId=${workerId}`,
     NEARBY: "/workers/nearby",
     PROFILE: "/workers/workerProfile",
+    EARNINGS_SUMMARY: "/earnings/summary",
+    EARNINGS_LIST: "/earnings",
+    EARNINGS_EXPORT: "/earnings/export",
   },
   ADMIN: {
     GET_USERS: "/users",

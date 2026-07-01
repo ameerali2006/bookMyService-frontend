@@ -297,6 +297,7 @@ export default function WorkerBookingDetailsPage() {
     try {
       const res = await workerService.reachedCustomerLocation(booking._id);
       setBooking(res.data.booking);
+      loadBooking()
     } catch {
       ErrorToast("Failed to verify arrival");
     }
@@ -329,7 +330,7 @@ export default function WorkerBookingDetailsPage() {
       ErrorToast(errorMessage);
     }
   };
-
+  
   const handleAddItem = async () => {
     // TODO: wire up API
   };

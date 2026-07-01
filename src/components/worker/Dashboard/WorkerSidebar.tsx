@@ -29,6 +29,7 @@ const profileSubItems = [
   { label: "View Profile", path: "/worker/profile/view" },
   { label: "Wallet", path: "/worker/profile/wallet" },
   { label: "Slot Management", path: "/worker/profile/slot" },
+  { label: "Revenue", path: "/worker/revenue" },
 ];
 
 export const WorkerSidebar = () => {

@@ -161,4 +161,26 @@ export const workerService = {
     markAllAsRead: async () => {
       return await workerAxios.patch(API_ROUTES.NOTIFICATION.MARK_ALL_READ);
     },
+    getEarningsSummary: async () => {
+      return await workerAxios.get(API_ROUTES.WORKER.EARNINGS_SUMMARY);
+    },
+    getEarningsList: async (params: {
+      page: number;
+      limit: number;
+      search?: string;
+      from?: string;
+      to?: string;
+    }) => {
+      return await workerAxios.get(API_ROUTES.WORKER.EARNINGS_LIST, { params });
+    },
+    exportEarningsPdf: async (params: {
+      search?: string;
+      from?: string;
+      to?: string;
+    }) => {
+      return await workerAxios.get(API_ROUTES.WORKER.EARNINGS_EXPORT, {
+        params,
+        responseType: "blob",
+      });
+    },
 };
