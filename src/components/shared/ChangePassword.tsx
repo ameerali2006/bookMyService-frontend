@@ -16,11 +16,19 @@ const schema = z
     oldPassword: z.string().min(6, "Old password must be at least 6 characters."),
     newPassword: z
       .string()
-      .min(8, "New password must be at least 8 characters.")
-      
-      .regex(/[a-z]/, "Must include at least one lowercase letter.")
-      .regex(/[0-9]/, "Must include at least one number."),
+      .min(8, "Password must be at least 8 characters.")
+      .regex(/[a-z]/, "Password must include at least one lowercase letter.")
+      .regex(/[A-Z]/, "Password must include at least one uppercase letter.")
+      .regex(/[0-9]/, "Password must include at least one number.")
+      .regex(
+        /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]/,
+        "Password must include at least one special character."
+      ),
     confirmPassword: z.string(),
+  })
+  .refine((data) => data.oldPassword !== data.newPassword, {
+    message: "New password cannot be the same as the old password.",
+    path: ["newPassword"],
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords do not match.",

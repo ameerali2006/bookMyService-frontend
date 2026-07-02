@@ -31,7 +31,12 @@ import { addUser } from "@/redux/slice/userTokenSlice";
 
 const formSchema = z
   .object({
-    name: z.string().min(2, "Name must be at least 2 characters."),
+    name: z.string().trim()
+    .min(2, "Name must be at least 2 characters")
+    .regex(
+      /^[A-Za-z]+(?:[ '-][A-Za-z]+)*$/,
+      "Only letters, spaces, apostrophes, and hyphens are allowed"
+    ),
     email: z.string().email("Invalid email address."),
     phone: z
       .string()

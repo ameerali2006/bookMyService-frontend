@@ -15,7 +15,12 @@ interface ResetPasswordFormProps {
   onSuccess?: () => void;
 }
 
-const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ role, token, onBack, onSuccess }) => {
+const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
+  role,
+  token,
+  onBack,
+  onSuccess,
+}) => {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -28,18 +33,40 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ role, token, onBa
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
+    if (!password || !confirmPassword) {
+      return setErrorMessage("Please fill in all fields.");
+    }
 
-    if (!password || !confirmPassword) return setErrorMessage("Please fill in all fields.");
-    if (password.length < 8) return setErrorMessage("Password must be at least 8 characters long.");
-    if (!/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) return setErrorMessage("Password must contain both letters and numbers.");
-    if (password !== confirmPassword) return setErrorMessage("Passwords do not match.");
-    if (!token) return setErrorMessage("Token not found.");
+    if (password.length < 8) {
+      return setErrorMessage("Password must be at least 8 characters long.");
+    }
 
+    // At least one uppercase, one lowercase, one number, and one special character
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#()_\-+=\[\]{}|\\:;"'<>,./~`]).{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+      return setErrorMessage(
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+      );
+    }
+
+    if (password !== confirmPassword) {
+      return setErrorMessage("Passwords do not match.");
+    }
+
+    if (!token) {
+      return setErrorMessage("Token not found.");
+    }
     setLoading(true);
     try {
-      const result=await (role === "user" ? authService.userResetPassword : authService.workerResetPassword)({ token, password, confirmPassword });
-      if(!result.data.success){
-        ErrorToast(result.data.message)
+      const result = await (
+        role === "user"
+          ? authService.userResetPassword
+          : authService.workerResetPassword
+      )({ token, password, confirmPassword });
+      if (!result.data.success) {
+        ErrorToast(result.data.message);
       }
       setResetSuccess(true);
       onSuccess?.();
@@ -63,19 +90,33 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ role, token, onBa
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-indigo-100 px-4">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-200">
-        <h2 className="text-2xl font-bold text-center mb-6 text-indigo-700">Reset Password</h2>
+        <h2 className="text-2xl font-bold text-center mb-6 text-indigo-700">
+          Reset Password
+        </h2>
 
         {!resetSuccess ? (
           <form onSubmit={handleSubmit} className="space-y-5">
             {errorMessage && (
-              <p className="text-sm text-red-600 bg-red-50 p-2 rounded-md border border-red-200">{errorMessage}</p>
+              <p className="text-sm text-red-600 bg-red-50 p-2 rounded-md border border-red-200">
+                {errorMessage}
+              </p>
             )}
 
             <div>
               <Label htmlFor="password">New Password</Label>
               <div className="relative mt-1">
-                <Input id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter new password" className="pr-10" />
-                <span onClick={() => setShowPassword((prev) => !prev)} className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500 hover:text-gray-700">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter new password"
+                  className="pr-10"
+                />
+                <span
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500 hover:text-gray-700"
+                >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </span>
               </div>
@@ -84,26 +125,53 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ role, token, onBa
             <div>
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <div className="relative mt-1">
-                <Input id="confirmPassword" type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm new password" className="pr-10" />
-                <span onClick={() => setShowConfirmPassword((prev) => !prev)} className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500 hover:text-gray-700">
-                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm new password"
+                  className="pr-10"
+                />
+                <span
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500 hover:text-gray-700"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={18} />
+                  ) : (
+                    <Eye size={18} />
+                  )}
                 </span>
               </div>
             </div>
 
             <div className="flex justify-between pt-4">
               {onBack && (
-                <Button type="button" variant="outline" onClick={onBack}>Back</Button>
+                <Button type="button" variant="outline" onClick={onBack}>
+                  Back
+                </Button>
               )}
-              <Button type="submit" disabled={loading} className="bg-indigo-600 hover:bg-indigo-700">
+              <Button
+                type="submit"
+                disabled={loading}
+                className="bg-indigo-600 hover:bg-indigo-700"
+              >
                 {loading ? "Resetting..." : "Reset Password"}
               </Button>
             </div>
           </form>
         ) : (
           <div className="text-center space-y-5">
-            <p className="text-green-600 font-medium">Your password has been reset successfully!</p>
-            <Button onClick={handleNavigateToLogin} className="bg-indigo-600 hover:bg-indigo-700">Continue to Login</Button>
+            <p className="text-green-600 font-medium">
+              Your password has been reset successfully!
+            </p>
+            <Button
+              onClick={handleNavigateToLogin}
+              className="bg-indigo-600 hover:bg-indigo-700"
+            >
+              Continue to Login
+            </Button>
           </div>
         )}
       </div>
